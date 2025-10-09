@@ -1,0 +1,57 @@
+@page "/signalr-test"
+@using Microsoft.AspNetCore.SignalR.Client
+@inject NavigationManager NavigationManager
+
+<h3>SignalR Test</h3>
+
+<div>
+    <input @bind="user" placeholder="Nome utente" />
+    <input @bind="message" placeholder="Messaggio" />
+    <button @onclick="SendMessage">Invia</button>
+</div>
+
+<ul>
+    @foreach (var msg in messages)
+    {
+        <li>@msg</li>
+    }
+</ul>
+
+@code {
+    private HubConnection? hubConnection;
+    private string user = "Blazor";
+    private string message = string.Empty;
+    private List<string> messages = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Usa la URL dell'API, non NavigationManager.BaseUri
+        var apiBaseUrl = "https://localhost:7050"; // Sostituisci con la porta reale dell'API
+        hubConnection = new HubConnectionBuilder()
+            .WithUrl($"{apiBaseUrl}/chathub")
+            .WithAutomaticReconnect()
+            .Build();
+
+        hubConnection.On<string, string>("ReceiveMessage", (user, message) =>
+        {
+            messages.Add($"{user}: {message}");
+            StateHasChanged();
+        });
+
+        await hubConnection.StartAsync();
+    }
+
+    private async Task SendMessage()
+    {
+        if (hubConnection is not null)
+        {
+            await hubConnection.SendAsync("SendMessage", user, message);
+            message = string.Empty;
+        }
+    }
+
+    public void Dispose()
+    {
+        _ = hubConnection?.DisposeAsync();
+    }
+}

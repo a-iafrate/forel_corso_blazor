@@ -1,3 +1,5 @@
+using ForelApi;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -21,13 +23,15 @@ builder.Services.AddSwaggerGen(options =>
 // Aggiungi CORS
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll", policy =>
+    options.AddDefaultPolicy(policy =>
     {
-        policy.AllowAnyOrigin()
+        policy.AllowAnyHeader()
               .AllowAnyMethod()
-              .AllowAnyHeader();
+              .AllowCredentials()
+              .SetIsOriginAllowed(_ => true);
     });
 });
+builder.Services.AddSignalR();
 
 var app = builder.Build();
 
@@ -48,10 +52,11 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 // Abilita CORS
-app.UseCors("AllowAll");
+app.UseCors();
 
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHub<ChatHub>("/chathub");
 
 app.Run();
