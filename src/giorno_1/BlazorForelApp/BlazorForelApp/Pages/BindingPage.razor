@@ -1,0 +1,80 @@
+﻿@page "/binding"
+
+<PageTitle>Counter</PageTitle>
+
+<h1>Counter</h1>
+<p role="status">Componente di sistema blazor</p>
+<InputText @bind-Value="testo"></InputText>
+<p role="status">Binding su controllo</p>
+<input type="text" @bind-value="@testo" />
+<p role="status">Proprietà di base</p>
+<input type="text" value="@testo" />
+<p role="status">Current text: @testo</p>
+
+<p role="status">Current count: @currentCount</p>
+<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+@for (int i = 1; i <= currentCount; i++)
+{
+    <p>This is paragraph number @i</p>
+}
+
+<hr />
+<h2>Binding su oggetto complesso</h2>
+<p>Nome: <InputText @bind-Value="persona.Nome" /></p>
+<p>Cognome: <InputText @bind-Value="persona.Cognome" /></p>
+<p>Età: <InputNumber @bind-Value="persona.Eta" /></p>
+<p>Risultato: @persona.Nome @persona.Cognome (@persona.Eta anni)</p>
+
+<hr />
+<h2>Binding su Checkbox</h2>
+<p>
+    <InputCheckbox @bind-Value="isChecked" /> Accettato: @isChecked
+</p>
+
+<hr />
+<h2>Binding su Select</h2>
+<select @bind="selectedColor">
+    <option value="Rosso">Rosso</option>
+    <option value="Verde">Verde</option>
+    <option value="Blu">Blu</option>
+</select>
+<p>Colore selezionato: @selectedColor</p>
+
+<hr />
+<h2>Binding su oggetto annidato</h2>
+<p>Città: <InputText @bind-Value="persona.Indirizzo.Citta" /></p>
+<p>Via: <InputText @bind-Value="persona.Indirizzo.Via" /></p>
+<p>Indirizzo: @persona.Indirizzo.Via, @persona.Indirizzo.Citta</p>
+
+@code {
+    private int currentCount = 0;
+    private string testo = "prova1";    
+    private void IncrementCount()
+    {
+        currentCount++;
+    }
+
+    private Persona persona = new Persona
+    {
+        Nome = "Mario",
+        Cognome = "Rossi",
+        Eta = 30,
+        Indirizzo = new Indirizzo { Citta = "Roma", Via = "Via Roma 1" }
+    };
+
+    private bool isChecked = false;
+    private string selectedColor = "Rosso";
+
+    public class Persona
+    {
+        public string Nome { get; set; } = string.Empty;
+        public string Cognome { get; set; } = string.Empty;
+        public int Eta { get; set; }
+        public Indirizzo Indirizzo { get; set; } = new Indirizzo();
+    }
+    public class Indirizzo
+    {
+        public string Citta { get; set; } = string.Empty;
+        public string Via { get; set; } = string.Empty;
+    }
+}
