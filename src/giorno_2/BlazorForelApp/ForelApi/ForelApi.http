@@ -1,0 +1,6 @@
+@ForelApi_HostAddress = http://localhost:5267
+
+GET {{ForelApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

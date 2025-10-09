@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="BlazorForelApp/BlazorForelApp.csproj" />
+  <Project Path="ForelApi/ForelApi.csproj" Id="7f530de2-7fe6-4ccf-a276-60ae328c9857" />
+</Solution>
