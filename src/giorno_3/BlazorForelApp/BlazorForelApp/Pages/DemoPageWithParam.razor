@@ -1,0 +1,77 @@
+@page "/demo-page-with-param/{id:int}"
+@inject NavigationManager Navigation
+
+<PageTitle>Pagina con Parametro</PageTitle>
+
+<h1>Pagina con Parametro di Route</h1>
+
+<div class="container mt-4">
+    <div class="alert alert-info">
+        <h4>Parametro Ricevuto!</h4>
+        <p>Questa pagina ha ricevuto un parametro attraverso la route URL.</p>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h5>Dettagli del Parametro</h5>
+        </div>
+        <div class="card-body">
+            <p><strong>Parametro ID:</strong> <span class="badge bg-primary fs-6">@Id</span></p>
+            <p><strong>Tipo:</strong> int (specificato con constraint {id:int})</p>
+            <p><strong>Route Pattern:</strong> /demo-page-with-param/{id:int}</p>
+            <p><strong>URL Completo:</strong> @Navigation.Uri</p>
+        </div>
+    </div>
+
+    <div class="card mt-3">
+        <div class="card-header">
+            <h5>Esempio di Utilizzo del Parametro</h5>
+        </div>
+        <div class="card-body">
+            <p>Il parametro può essere usato per:</p>
+            <ul>
+                <li>Caricare dati specifici (es. utente con ID = @Id)</li>
+                <li>Mostrare dettagli di un elemento</li>
+                <li>Configurare il comportamento della pagina</li>
+            </ul>
+            
+            <div class="alert alert-secondary mt-3">
+                <strong>Simulazione:</strong> 
+                @if (Id % 2 == 0)
+                {
+                    <span class="text-success">? ID Pari - Accesso Consentito</span>
+                }
+                else
+                {
+                    <span class="text-warning">?? ID Dispari - Modalità Guest</span>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <NavLink class="btn btn-primary me-2" href="/navigation-demo">
+            <span class="emoji-icon">??</span> Torna alla Demo
+        </NavLink>
+        <NavLink class="btn btn-success me-2" href="@($"/demo-page-with-param/{Id + 1}")">
+            <span class="emoji-icon">??</span> Prossimo ID (@(Id + 1))
+        </NavLink>
+        @if (Id > 1)
+        {
+            <NavLink class="btn btn-warning" href="@($"/demo-page-with-param/{Id - 1}")">
+                <span class="emoji-icon">??</span> ID Precedente (@(Id - 1))
+            </NavLink>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter] public int Id { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        // Questo metodo viene chiamato quando i parametri cambiano
+        // Utile per ricaricare dati quando si naviga tra pagine con parametri diversi
+        Console.WriteLine($"Parametro ID aggiornato a: {Id}");
+    }
+}

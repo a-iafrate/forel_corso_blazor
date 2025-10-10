@@ -1,0 +1,97 @@
+@page "/demo-page-query"
+@inject NavigationManager Navigation
+
+<PageTitle>Pagina con Query String</PageTitle>
+
+<h1>Demo Query String</h1>
+
+<div class="container mt-4">
+    <div class="alert alert-info">
+        <h4>Parametri Query String</h4>
+        <p><strong>Nome:</strong> @(Name ?? "Non specificato")</p>
+        <p><strong>Età:</strong> @(Age?.ToString() ?? "Non specificata")</p>
+        <p><strong>URL:</strong> @Navigation.Uri</p>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <h5>Modifica Parametri</h5>
+            <div class="mb-3">
+                <label for="nameInput" class="form-label">Nome:</label>
+                <input type="text" id="nameInput" class="form-control" @bind="newName" />
+            </div>
+            <div class="mb-3">
+                <label for="ageInput" class="form-label">Età:</label>
+                <input type="number" id="ageInput" class="form-control" @bind="newAge" min="0" max="120" />
+            </div>
+            <button class="btn btn-primary" @onclick="UpdateUrl" disabled="@isUpdating">
+                @if (isUpdating)
+                {
+                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                }
+                Aggiorna
+            </button>
+        </div>
+    </div>
+
+    <div class="mt-3">
+        <NavLink class="btn btn-secondary" href="/navigation-demo">
+            <span class="emoji-icon">??</span> Torna alla Demo
+        </NavLink>
+        <NavLink class="btn btn-info ms-2" href="/demo-page-query?name=Mario&age=30">Esempio</NavLink>
+    </div>
+</div>
+
+@code {
+    [SupplyParameterFromQuery(Name = "name")] public string? Name { get; set; }
+    [SupplyParameterFromQuery(Name = "age")] public int? Age { get; set; }
+
+    private string newName = "";
+    private int? newAge;
+    private bool isUpdating = false;
+
+    protected override void OnInitialized()
+    {
+        UpdateFormValues();
+    }
+
+    protected override void OnParametersSet()
+    {
+        UpdateFormValues();
+    }
+
+    private void UpdateFormValues()
+    {
+        newName = Name ?? "";
+        newAge = Age;
+    }
+
+    private async Task UpdateUrl()
+    {
+        if (isUpdating) return;
+        
+        isUpdating = true;
+        await InvokeAsync(StateHasChanged);
+
+        try
+        {
+            var url = "/demo-page-query";
+            var parameters = new List<string>();
+            
+            if (!string.IsNullOrWhiteSpace(newName))
+                parameters.Add($"name={Uri.EscapeDataString(newName.Trim())}");
+                
+            if (newAge.HasValue && newAge.Value >= 0 && newAge.Value <= 120)
+                parameters.Add($"age={newAge.Value}");
+
+            if (parameters.Count > 0)
+                url += "?" + string.Join("&", parameters);
+
+            Navigation.NavigateTo(url);
+        }
+        finally
+        {
+            isUpdating = false;
+        }
+    }
+}

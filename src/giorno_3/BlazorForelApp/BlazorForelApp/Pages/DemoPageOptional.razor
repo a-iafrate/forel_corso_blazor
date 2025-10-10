@@ -1,0 +1,167 @@
+@page "/demo-page-optional"
+@page "/demo-page-optional/{category?}"
+@inject NavigationManager Navigation
+
+<PageTitle>Pagina con Parametro Opzionale</PageTitle>
+
+<h1>Pagina con Parametro Opzionale</h1>
+
+<div class="container mt-4">
+    <div class="alert alert-info">
+        <h4>Parametro Opzionale!</h4>
+        <p>Questa pagina può funzionare sia con che senza parametri nella route.</p>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h5>Stato del Parametro</h5>
+        </div>
+        <div class="card-body">
+            @if (!string.IsNullOrEmpty(Category))
+            {
+                <p><strong>Categoria:</strong> <span class="badge bg-success fs-6">@Category</span></p>
+                <p><strong>Route Utilizzata:</strong> /demo-page-optional/{category?}</p>
+                <div class="alert alert-success">
+                    ? Parametro fornito - Modalità specifica per categoria
+                </div>
+            }
+            else
+            {
+                <p><strong>Categoria:</strong> <span class="badge bg-secondary fs-6">Nessuna</span></p>
+                <p><strong>Route Utilizzata:</strong> /demo-page-optional</p>
+                <div class="alert alert-primary">
+                    ?? Nessun parametro - Modalità generale
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="card mt-3">
+        <div class="card-header">
+            <h5>Contenuto Dinamico</h5>
+        </div>
+        <div class="card-body">
+            @if (!string.IsNullOrEmpty(Category))
+            {
+                <h6>Contenuto per categoria: @Category</h6>
+                @switch (Category.ToLower())
+                {
+                    case "tecnologia":
+                        <div class="alert alert-info">
+                            <h6><span class="emoji-icon">??</span> Sezione Tecnologia</h6>
+                            <p>Qui trovi tutti i prodotti tecnologici, dal software all'hardware.</p>
+                            <p>Offerte speciali su laptop, smartphone e accessori!</p>
+                        </div>
+                        break;
+                    case "sport":
+                        <div class="alert alert-success">
+                            <h6><span class="emoji-icon">?</span> Sezione Sport</h6>
+                            <p>Attrezzature sportive, abbigliamento e accessori per ogni disciplina.</p>
+                            <p>Sconti fino al 30% su scarpe da running!</p>
+                        </div>
+                        break;
+                    case "casa":
+                        <div class="alert alert-warning">
+                            <h6><span class="emoji-icon">??</span> Sezione Casa</h6>
+                            <p>Tutto per la casa: mobili, decorazioni e elettrodomestici.</p>
+                            <p>Nuova collezione primavera disponibile!</p>
+                        </div>
+                        break;
+                    default:
+                        <div class="alert alert-secondary">
+                            <h6><span class="emoji-icon">??</span> Categoria: @Category</h6>
+                            <p>Categoria personalizzata. Contenuto generico per questa sezione.</p>
+                        </div>
+                        break;
+                }
+            }
+            else
+            {
+                <h6>Panoramica Generale</h6>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <h5><span class="emoji-icon">??</span></h5>
+                                <p>Tecnologia</p>
+                                <NavLink class="btn btn-primary btn-sm" href="/demo-page-optional/tecnologia">
+                                    Esplora
+                                </NavLink>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <h5><span class="emoji-icon">?</span></h5>
+                                <p>Sport</p>
+                                <NavLink class="btn btn-success btn-sm" href="/demo-page-optional/sport">
+                                    Esplora
+                                </NavLink>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <h5><span class="emoji-icon">??</span></h5>
+                                <p>Casa</p>
+                                <NavLink class="btn btn-warning btn-sm" href="/demo-page-optional/casa">
+                                    Esplora
+                                </NavLink>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="card mt-3">
+        <div class="card-header">
+            <h5>Navigazione Rapida</h5>
+        </div>
+        <div class="card-body">
+            <div class="btn-group" role="group">
+                <NavLink class="btn btn-outline-primary" href="/demo-page-optional">
+                    <span class="emoji-icon">??</span> Generale
+                </NavLink>
+                <NavLink class="btn btn-outline-secondary" href="/demo-page-optional/tecnologia">
+                    <span class="emoji-icon">??</span> Tecnologia
+                </NavLink>
+                <NavLink class="btn btn-outline-secondary" href="/demo-page-optional/sport">
+                    <span class="emoji-icon">?</span> Sport
+                </NavLink>
+                <NavLink class="btn btn-outline-secondary" href="/demo-page-optional/casa">
+                    <span class="emoji-icon">??</span> Casa
+                </NavLink>
+                <NavLink class="btn btn-outline-secondary" href="/demo-page-optional/libri">
+                    <span class="emoji-icon">??</span> Libri
+                </NavLink>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <NavLink class="btn btn-primary" href="/navigation-demo">
+            <span class="emoji-icon">??</span> Torna alla Demo
+        </NavLink>
+    </div>
+</div>
+
+@code {
+    [Parameter] public string? Category { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        // Viene chiamato ogni volta che i parametri cambiano
+        if (!string.IsNullOrEmpty(Category))
+        {
+            Console.WriteLine($"Navigato alla categoria: {Category}");
+        }
+        else
+        {
+            Console.WriteLine("Navigato alla pagina generale (senza categoria)");
+        }
+    }
+}

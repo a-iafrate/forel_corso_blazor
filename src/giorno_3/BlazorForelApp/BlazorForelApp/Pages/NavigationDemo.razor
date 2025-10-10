@@ -1,0 +1,199 @@
+@page "/navigation-demo"
+@inject NavigationManager Navigation
+
+<PageTitle>Demo Navigazione</PageTitle>
+
+<h1>Demo delle Funzionalità di Navigazione in Blazor</h1>
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="alert alert-info">
+                <h4>Benvenuto nella Demo di Navigazione!</h4>
+                <p>Questa pagina dimostra le varie tecniche di navigazione disponibili in Blazor.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>1. Navigazione Semplice con NavLink</h5>
+                </div>
+                <div class="card-body">
+                    <p>Navigazione dichiarativa usando componenti NavLink:</p>
+                    <NavLink class="btn btn-primary" href="/demo-page-simple">
+                        Vai alla Pagina Semplice
+                    </NavLink>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>2. Navigazione Programmatica</h5>
+                </div>
+                <div class="card-body">
+                    <p>Navigazione usando NavigationManager nel codice C#:</p>
+                    <button class="btn btn-success" @onclick="NavigateProgrammatically">
+                        Naviga Programmaticamente
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>3. Parametri di Route</h5>
+                </div>
+                <div class="card-body">
+                    <p>Pagine che accettano parametri attraverso la route:</p>
+                    <div class="mb-2">
+                        <label for="parameterIdInput" class="form-label">Inserisci un ID:</label>
+                        <input type="number" id="parameterIdInput" class="form-control" @bind="parameterId" min="1" max="9999" />
+                    </div>
+                    <NavLink class="btn btn-info" href="@($"/demo-page-with-param/{Math.Max(1, parameterId)}")">
+                        Vai alla Pagina con Parametro ID
+                    </NavLink>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>4. Parametri Query String</h5>
+                </div>
+                <div class="card-body">
+                    <p>Passaggio di dati attraverso query string:</p>
+                    <div class="mb-2">
+                        <label for="queryNameInput" class="form-label">Nome:</label>
+                        <input type="text" id="queryNameInput" class="form-control" @bind="queryName" maxlength="50" />
+                    </div>
+                    <div class="mb-2">
+                        <label for="queryAgeInput" class="form-label">Età:</label>
+                        <input type="number" id="queryAgeInput" class="form-control" @bind="queryAge" min="0" max="120" />
+                    </div>
+                    <NavLink class="btn btn-warning" href="@GetQueryStringUrl()">
+                        Vai alla Pagina con Query String
+                    </NavLink>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>5. Parametri Opzionali</h5>
+                </div>
+                <div class="card-body">
+                    <p>Pagine con parametri opzionali:</p>
+                    <NavLink class="btn btn-secondary me-2" href="/demo-page-optional">
+                        Senza Parametro
+                    </NavLink>
+                    <NavLink class="btn btn-secondary" href="/demo-page-optional/blazor">
+                        Con Parametro "blazor"
+                    </NavLink>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>6. Navigazione con Oggetti Complessi</h5>
+                </div>
+                <div class="card-body">
+                    <p>Passaggio di oggetti attraverso NavigationManager.NavigateTo con state:</p>
+                    <div class="mb-2">
+                        <label for="productNameInput" class="form-label">Nome Prodotto:</label>
+                        <input type="text" id="productNameInput" class="form-control" @bind="productName" maxlength="100" />
+                    </div>
+                    <div class="mb-2">
+                        <label for="productPriceInput" class="form-label">Prezzo:</label>
+                        <input type="number" id="productPriceInput" step="0.01" class="form-control" @bind="productPrice" min="0" max="99999.99" />
+                    </div>
+                    <button class="btn btn-dark" @onclick="NavigateWithState">
+                        Naviga con Oggetto Complesso
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>7. Informazioni sulla Navigazione Corrente</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>URL Corrente:</strong> @Navigation.Uri</p>
+                    <p><strong>Base URL:</strong> @Navigation.BaseUri</p>
+                    <p><strong>Path Relativo:</strong> @GetRelativePath()</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private int parameterId = 123;
+    private string queryName = "Mario";
+    private int queryAge = 30;
+    private string productName = "Laptop";
+    private decimal productPrice = 1299.99m;
+
+    private void NavigateProgrammatically()
+    {
+        Navigation.NavigateTo("/demo-page-simple");
+    }
+
+    private void NavigateWithState()
+    {
+        // Validate inputs before navigation
+        if (string.IsNullOrWhiteSpace(productName) || productPrice <= 0)
+        {
+            return;
+        }
+
+        var product = new { 
+            Name = productName.Trim(), 
+            Price = Math.Round(productPrice, 2), 
+            Id = Random.Shared.Next(1, 1000) 
+        };
+        
+        // Nota: In una vera applicazione, potresti usare un servizio di stato o localStorage
+        // per passare oggetti complessi tra pagine
+        Navigation.NavigateTo($"/demo-page-state?name={Uri.EscapeDataString(product.Name)}&price={product.Price}&id={product.Id}");
+    }
+
+    private string GetRelativePath()
+    {
+        return Navigation.ToBaseRelativePath(Navigation.Uri);
+    }
+
+    private string GetQueryStringUrl()
+    {
+        var url = "/demo-page-query";
+        var parameters = new List<string>();
+        
+        if (!string.IsNullOrWhiteSpace(queryName))
+            parameters.Add($"name={Uri.EscapeDataString(queryName.Trim())}");
+            
+        if (queryAge > 0 && queryAge <= 120)
+            parameters.Add($"age={queryAge}");
+
+        if (parameters.Count > 0)
+            url += "?" + string.Join("&", parameters);
+
+        return url;
+    }
+}

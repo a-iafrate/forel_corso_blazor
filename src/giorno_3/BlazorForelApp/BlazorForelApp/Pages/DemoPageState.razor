@@ -1,0 +1,158 @@
+@page "/demo-page-state"
+@inject NavigationManager Navigation
+
+<PageTitle>Pagina con Stato</PageTitle>
+
+<h1>Demo Oggetti Complessi</h1>
+
+<div class="container mt-4">
+    <div class="alert alert-info">
+        <h4>Dettagli Prodotto</h4>
+        @if (Product != null)
+        {
+            <p><strong>ID:</strong> @Product.Id</p>
+            <p><strong>Nome:</strong> @Product.Name</p>
+            <p><strong>Prezzo:</strong> €@Product.Price.ToString("F2")</p>
+        }
+        else
+        {
+            <p>Nessun prodotto specificato</p>
+        }
+    </div>
+
+    @if (!string.IsNullOrEmpty(ActionMessage))
+    {
+        <div class="alert alert-success">
+            @ActionMessage
+        </div>
+    }
+
+    @if (Product != null)
+    {
+        <div class="card">
+            <div class="card-body">
+                <h5>Azioni</h5>
+                <button class="btn btn-success me-2" @onclick="AddToCart">Aggiungi al Carrello</button>
+                <button class="btn btn-info" @onclick="AddToWishlist">Aggiungi ai Preferiti</button>
+            </div>
+        </div>
+    }
+
+    <div class="card mt-3">
+        <div class="card-body">
+            <h5>Altri Prodotti</h5>
+            <div class="row">
+                <div class="col-md-4">
+                    <button class="btn btn-outline-primary w-100" @onclick="NavigateToSmartphone">
+                        <span class="emoji-icon">??</span> Smartphone - €699.99
+                    </button>
+                </div>
+                <div class="col-md-4">
+                    <button class="btn btn-outline-primary w-100" @onclick="NavigateToTablet">
+                        <span class="emoji-icon">??</span> Tablet - €449.99
+                    </button>
+                </div>
+                <div class="col-md-4">
+                    <button class="btn btn-outline-primary w-100" @onclick="NavigateToHeadphones">
+                        <span class="emoji-icon">??</span> Auricolari - €129.99
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-3">
+        <NavLink class="btn btn-secondary" href="/navigation-demo">
+            <span class="emoji-icon">??</span> Torna alla Demo
+        </NavLink>
+    </div>
+</div>
+
+@code {
+    [SupplyParameterFromQuery(Name = "name")] public string? ProductName { get; set; }
+    [SupplyParameterFromQuery(Name = "price")] public decimal? ProductPrice { get; set; }
+    [SupplyParameterFromQuery(Name = "id")] public int? ProductId { get; set; }
+
+    private ProductInfo? Product { get; set; }
+    private string ActionMessage = "";
+
+    protected override void OnInitialized()
+    {
+        InitializeProduct();
+    }
+
+    protected override void OnParametersSet()
+    {
+        InitializeProduct();
+    }
+
+    private void InitializeProduct()
+    {
+        if (!string.IsNullOrWhiteSpace(ProductName) && ProductPrice.HasValue && ProductId.HasValue)
+        {
+            Product = new ProductInfo
+            {
+                Id = ProductId.Value,
+                Name = ProductName.Trim(),
+                Price = ProductPrice.Value
+            };
+        }
+        else
+        {
+            Product = null;
+        }
+        
+        // Reset message when parameters change
+        ActionMessage = "";
+    }
+
+    private async Task AddToCart()
+    {
+        if (Product != null)
+        {
+            ActionMessage = $"'{Product.Name}' aggiunto al carrello!";
+            await InvokeAsync(StateHasChanged);
+            
+            // Clear message after 3 seconds
+            await Task.Delay(3000);
+            ActionMessage = "";
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
+    private async Task AddToWishlist()
+    {
+        if (Product != null)
+        {
+            ActionMessage = $"'{Product.Name}' aggiunto ai preferiti!";
+            await InvokeAsync(StateHasChanged);
+            
+            // Clear message after 3 seconds
+            await Task.Delay(3000);
+            ActionMessage = "";
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
+    private void NavigateToSmartphone()
+    {
+        Navigation.NavigateTo("/demo-page-state?name=Smartphone&price=699.99&id=1");
+    }
+
+    private void NavigateToTablet()
+    {
+        Navigation.NavigateTo("/demo-page-state?name=Tablet&price=449.99&id=2");
+    }
+
+    private void NavigateToHeadphones()
+    {
+        Navigation.NavigateTo("/demo-page-state?name=Auricolari&price=129.99&id=3");
+    }
+
+    public class ProductInfo
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = "";
+        public decimal Price { get; set; }
+    }
+}

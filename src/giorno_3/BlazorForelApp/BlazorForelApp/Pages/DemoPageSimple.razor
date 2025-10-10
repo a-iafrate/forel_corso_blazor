@@ -1,0 +1,40 @@
+@page "/demo-page-simple"
+@inject NavigationManager Navigation
+
+<PageTitle>Pagina Semplice</PageTitle>
+
+<h1>Pagina Semplice</h1>
+
+<div class="container mt-4">
+    <div class="alert alert-success">
+        <h4>Navigazione Riuscita!</h4>
+        <p>Sei arrivato a questa pagina usando una navigazione semplice con NavLink.</p>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h5>Dettagli della Navigazione</h5>
+        </div>
+        <div class="card-body">
+            <p><strong>Tipo di Navigazione:</strong> NavLink dichiarativo</p>
+            <p><strong>Route:</strong> /demo-page-simple</p>
+            <p><strong>Metodo:</strong> Componente NavLink nel markup Razor</p>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <NavLink class="btn btn-primary me-2" href="/navigation-demo">
+            <span class="emoji-icon">??</span> Torna alla Demo
+        </NavLink>
+        <button class="btn btn-secondary" @onclick="GoBack">
+            <span class="emoji-icon">??</span> Indietro (Programmatico)
+        </button>
+    </div>
+</div>
+
+@code {
+    private void GoBack()
+    {
+        Navigation.NavigateTo("/navigation-demo");
+    }
+}
