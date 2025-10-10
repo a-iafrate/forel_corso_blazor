@@ -1,0 +1,350 @@
+@page "/blazor-bootstrap-demo"
+
+<PageTitle>Blazor.Bootstrap Components Demo</PageTitle>
+
+<div class="container-fluid">
+    <h1 class="mb-4">?? Demo Componenti Blazor.Bootstrap</h1>
+    <p class="lead text-muted">Panoramica dei principali componenti di Blazor.Bootstrap per il corso</p>
+
+    <div class="row g-4">
+        <!-- Alert Components -->
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3>?? Alert Components</h3>
+                </div>
+                <div class="card-body">
+                    <Alert Color="AlertColor.Primary" Dismissable="true">
+                        <Icon Name="IconName.InfoCircleFill" class="me-2" />
+                        Alert primario con icona e possibilità di chiusura
+                    </Alert>
+                    <Alert Color="AlertColor.Success">
+                        ? Operazione completata con successo!
+                    </Alert>
+                    <Alert Color="AlertColor.Warning">
+                        ?? Attenzione: questo è un messaggio di avviso
+                    </Alert>
+                </div>
+            </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3>?? Button Components</h3>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex flex-wrap gap-2 mb-3">
+                        <Button Color="ButtonColor.Primary" @onclick="OnButtonClick">Primario</Button>
+                        <Button Color="ButtonColor.Secondary" @onclick="OnButtonClick">Secondario</Button>
+                        <Button Color="ButtonColor.Success" @onclick="OnButtonClick">Successo</Button>
+                        <Button Color="ButtonColor.Danger" @onclick="OnButtonClick">Pericolo</Button>
+                    </div>
+                    <div class="d-flex flex-wrap gap-2">
+                        <Button Color="ButtonColor.Primary" Outline="true">Outline</Button>
+                        <Button Color="ButtonColor.Secondary" Size="ButtonSize.Small">Piccolo</Button>
+                        <Button Color="ButtonColor.Primary" Size="ButtonSize.Large">Grande</Button>
+                        <Button Color="ButtonColor.Primary" Loading="@isLoading" @onclick="OnLoadingButtonClick">
+                            @if (isLoading)
+                            {
+                                <span>Caricamento...</span>
+                            }
+                            else
+                            {
+                                <span>Clicca per Loading</span>
+                            }
+                        </Button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Badge -->
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3>??? Badge Components</h3>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex flex-wrap gap-2 mb-3">
+                        <Badge Color="BadgeColor.Primary">Primario</Badge>
+                        <Badge Color="BadgeColor.Secondary">Secondario</Badge>
+                        <Badge Color="BadgeColor.Success">Successo</Badge>
+                        <Badge Color="BadgeColor.Danger">Pericolo</Badge>
+                        <Badge Color="BadgeColor.Warning">Avviso</Badge>
+                        <Badge Color="BadgeColor.Info">Informazione</Badge>
+                    </div>
+                    <p>Esempio con contatori: 
+                        <Badge Color="BadgeColor.Primary">Notifiche <Badge Color="BadgeColor.Light">@notificationCount</Badge></Badge>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress -->
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3>?? Progress Components</h3>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label">Progresso: @progressValue%</label>
+                        <Progress Value="@progressValue" Color="ProgressColor.Primary" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Con strisce</label>
+                        <Progress Value="75" Color="ProgressColor.Success" Striped="true" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Animato</label>
+                        <Progress Value="50" Color="ProgressColor.Info" Striped="true" Animated="true" />
+                    </div>
+                    <Button Color="ButtonColor.Primary" @onclick="UpdateProgress">Aggiorna Progresso</Button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3>?? Modal Component</h3>
+                </div>
+                <div class="card-body">
+                    <Button Color="ButtonColor.Primary" @onclick="ShowModal">Mostra Modal</Button>
+                    
+                    <Modal @ref="modal" Title="Demo Modal">
+                        <BodyTemplate>
+                            <p>Questo è il contenuto del modal di esempio.</p>
+                            <p>Puoi inserire qualsiasi contenuto qui dentro!</p>
+                        </BodyTemplate>
+                        <FooterTemplate>
+                            <Button Color="ButtonColor.Secondary" @onclick="HideModal">Chiudi</Button>
+                            <Button Color="ButtonColor.Primary" @onclick="HideModal">Salva</Button>
+                        </FooterTemplate>
+                    </Modal>
+                </div>
+            </div>
+        </div>
+
+        <!-- Accordion -->
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3>?? Accordion Component</h3>
+                </div>
+                <div class="card-body">
+                    <Accordion>
+                        <AccordionItem Title="?? Sezione Uno" Name="item1">
+                            <Content>
+                                Contenuto della prima sezione dell'accordion.
+                                Molto utile per organizzare contenuti lunghi!
+                            </Content>
+                        </AccordionItem>
+                        <AccordionItem Title="?? Sezione Due" Name="item2">
+                            <Content>
+                                Contenuto della seconda sezione.
+                                Ogni sezione può essere espansa indipendentemente.
+                            </Content>
+                        </AccordionItem>
+                        <AccordionItem Title="?? Sezione Tre" Name="item3">
+                            <Content>
+                                Ultima sezione con contenuto di esempio.
+                                Perfetto per FAQ o documentazione!
+                            </Content>
+                        </AccordionItem>
+                    </Accordion>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3>?? Tabs Component</h3>
+                </div>
+                <div class="card-body">
+                    <Tabs>
+                        <Tab Title="?? Home" Name="home">
+                            <Content>
+                                <h4>Contenuto della tab Home</h4>
+                                <p>Questa è la prima tab con contenuto di esempio.</p>
+                                <Button Color="ButtonColor.Primary" Size="ButtonSize.Small">Azione Home</Button>
+                            </Content>
+                        </Tab>
+                        <Tab Title="?? Profilo" Name="profile">
+                            <Content>
+                                <h4>Contenuto della tab Profilo</h4>
+                                <p>Informazioni del profilo utente vanno qui.</p>
+                                <div class="d-flex gap-2">
+                                    <Badge Color="BadgeColor.Success">Attivo</Badge>
+                                    <Badge Color="BadgeColor.Info">Verificato</Badge>
+                                </div>
+                            </Content>
+                        </Tab>
+                        <Tab Title="?? Impostazioni" Name="settings">
+                            <Content>
+                                <h4>Contenuto della tab Impostazioni</h4>
+                                <p>Configurazioni e preferenze dell'applicazione.</p>
+                                <Button Color="ButtonColor.Warning" Size="ButtonSize.Small">Salva Impostazioni</Button>
+                            </Content>
+                        </Tab>
+                    </Tabs>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toast -->
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3>?? Toast Component</h3>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex flex-wrap gap-2">
+                        <Button Color="ButtonColor.Success" @onclick="ShowSuccessToast">Toast Successo</Button>
+                        <Button Color="ButtonColor.Danger" @onclick="ShowErrorToast">Toast Errore</Button>
+                        <Button Color="ButtonColor.Info" @onclick="ShowInfoToast">Toast Info</Button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Spinner -->
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3>? Spinner Component</h3>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex flex-wrap gap-3 align-items-center">
+                        <Spinner Color="SpinnerColor.Primary" />
+                        <Spinner Color="SpinnerColor.Secondary" Type="SpinnerType.Grow" />
+                        <Spinner Color="SpinnerColor.Success" Size="SpinnerSize.Small" />
+                        <Spinner Color="SpinnerColor.Danger" Size="SpinnerSize.Large" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics -->
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3>?? Statistiche Interazioni</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-md-3">
+                            <div class="bg-primary bg-opacity-10 p-3 rounded">
+                                <h4 class="text-primary">@buttonClickCount</h4>
+                                <small>Click sui Button</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="bg-success bg-opacity-10 p-3 rounded">
+                                <h4 class="text-success">@modalOpenCount</h4>
+                                <small>Modal Aperti</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="bg-info bg-opacity-10 p-3 rounded">
+                                <h4 class="text-info">@toastCount</h4>
+                                <small>Toast Mostrati</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="bg-warning bg-opacity-10 p-3 rounded">
+                                <h4 class="text-warning">@progressUpdateCount</h4>
+                                <small>Aggiornamenti Progresso</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private Modal modal = default!;
+    private int buttonClickCount = 0;
+    private int modalOpenCount = 0;
+    private int toastCount = 0;
+    private int progressUpdateCount = 0;
+    private int notificationCount = 42;
+    private int progressValue = 35;
+    private bool isLoading = false;
+
+    private void OnButtonClick()
+    {
+        buttonClickCount++;
+        StateHasChanged();
+    }
+
+    private async Task OnLoadingButtonClick()
+    {
+        isLoading = true;
+        StateHasChanged();
+        
+        await Task.Delay(2000); // Simula operazione asincrona
+        
+        isLoading = false;
+        buttonClickCount++;
+        StateHasChanged();
+    }
+
+    private async Task ShowModal()
+    {
+        modalOpenCount++;
+        await modal.ShowAsync();
+    }
+
+    private async Task HideModal()
+    {
+        await modal.HideAsync();
+    }
+
+    private void UpdateProgress()
+    {
+        var random = new Random();
+        progressValue = random.Next(0, 101);
+        progressUpdateCount++;
+        StateHasChanged();
+    }
+
+    private void ShowSuccessToast()
+    {
+        toastCount++;
+        ToastService.Notify(new ToastMessage(
+            ToastType.Success, 
+            "Successo!", 
+            "Operazione completata con successo! ??"
+        ));
+    }
+
+    private void ShowErrorToast()
+    {
+        toastCount++;
+        ToastService.Notify(new ToastMessage(
+            ToastType.Danger, 
+            "Errore!", 
+            "Si è verificato un errore durante l'operazione. ?"
+        ));
+    }
+
+    private void ShowInfoToast()
+    {
+        toastCount++;
+        ToastService.Notify(new ToastMessage(
+            ToastType.Info, 
+            "Informazione", 
+            "Questo è un messaggio informativo. ??"
+        ));
+    }
+
+    [Inject] protected ToastService ToastService { get; set; } = default!;
+}

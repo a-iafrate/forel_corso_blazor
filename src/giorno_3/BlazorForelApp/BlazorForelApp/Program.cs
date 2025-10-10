@@ -12,4 +12,7 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 // Aggiunge Blazored.LocalStorage
 builder.Services.AddBlazoredLocalStorage();
 
+// Aggiunge Blazor.Bootstrap
+builder.Services.AddBlazorBootstrap();
+
 await builder.Build().RunAsync();
