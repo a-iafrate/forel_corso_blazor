@@ -1,0 +1,337 @@
+@page "/html-css-demo"
+
+<PageTitle>Demo HTML e CSS</PageTitle>
+
+<link href="css/html-css-demo.css" rel="stylesheet" />
+
+<h1>Demo HTML e CSS per Customizzazione Componenti</h1>
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="alert alert-primary">
+                <h4 class="emoji-icon">??</h4>
+                <h4>Personalizzazione Avanzata dei Componenti Blazor</h4>
+                <p>Questa pagina dimostra come utilizzare HTML e CSS per creare componenti personalizzati e migliorare l'esperienza utente.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sezione 1: Pulsanti Personalizzati -->
+    <div class="row mb-5">
+        <div class="col-md-12">
+            <div class="demo-section">
+                <h3>1. Pulsanti Personalizzati</h3>
+                <p>Utilizzo di classi CSS custom per creare pulsanti con stili unici:</p>
+                
+                <div class="buttons-showcase">
+                    <button class="btn-custom-gradient" @onclick="ShowMessage">
+                        Pulsante Gradiente
+                    </button>
+                    
+                    <button class="btn-custom-neon" @onclick="ShowMessage">
+                        Pulsante Neon
+                    </button>
+                    
+                    <button class="btn-custom-3d" @onclick="ShowMessage">
+                        Pulsante 3D
+                    </button>
+                    
+                    <button class="btn-custom-loading @(isLoading ? "loading" : "")" @onclick="SimulateLoading">
+                        @if (isLoading)
+                        {
+                            <span class="spinner"></span>
+                            <span>Caricamento...</span>
+                        }
+                        else
+                        {
+                            <span>Pulsante con Loading</span>
+                        }
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sezione 2: Card Personalizzate -->
+    <div class="row mb-5">
+        <div class="col-md-6">
+            <div class="custom-card card-hover-effect">
+                <div class="card-header-custom">
+                    <i class="icon-star"></i>
+                    <h4>Card con Hover Effect</h4>
+                </div>
+                <div class="card-body-custom">
+                    <p>Questa card ha effetti di hover personalizzati con animazioni CSS.</p>
+                    <div class="progress-bar-custom">
+                        <div class="progress-fill" style="width: @(progressValue)%"></div>
+                    </div>
+                    <p><small>Progresso: @progressValue%</small></p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="custom-card card-glassmorphism">
+                <div class="card-header-custom">
+                    <i class="icon-glass"></i>
+                    <h4>Card Glassmorphism</h4>
+                </div>
+                <div class="card-body-custom">
+                    <p>Effetto vetro moderno con trasparenza e blur.</p>
+                    <div class="stats-container">
+                        <div class="stat-item">
+                            <div class="stat-number">@currentCount</div>
+                            <div class="stat-label">Counter</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">@DateTime.Now.Second</div>
+                            <div class="stat-label">Secondi</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sezione 3: Form Controls Personalizzati -->
+    <div class="row mb-5">
+        <div class="col-md-12">
+            <div class="demo-section">
+                <h3>3. Controlli Form Personalizzati</h3>
+                
+                <div class="custom-form">
+                    <div class="form-group-custom">
+                        <label class="label-floating">Nome Utente</label>
+                        <input type="text" class="input-custom" @bind="userName" @onfocus="OnInputFocus" @onblur="OnInputBlur" />
+                        <div class="input-underline"></div>
+                    </div>
+                    
+                    <div class="form-group-custom">
+                        <label class="label-floating">Email</label>
+                        <input type="email" class="input-custom" @bind="userEmail" @onfocus="OnInputFocus" @onblur="OnInputBlur" />
+                        <div class="input-underline"></div>
+                    </div>
+                    
+                    <div class="toggle-container">
+                        <label class="toggle-label">Ricevi notifiche</label>
+                        <div class="toggle-switch @(receiveNotifications ? "active" : "")" @onclick="ToggleNotifications">
+                            <div class="toggle-slider"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="range-container">
+                        <label>Volume: @volumeLevel</label>
+                        <input type="range" class="range-custom" min="0" max="100" @bind="volumeLevel" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sezione 4: Layout Flessibili -->
+    <div class="row mb-5">
+        <div class="col-md-12">
+            <div class="demo-section">
+                <h3>4. Layout CSS Grid e Flexbox</h3>
+                
+                <div class="layout-showcase">
+                    <div class="grid-container">
+                        <div class="grid-item header-item">Header</div>
+                        <div class="grid-item sidebar-item">Sidebar</div>
+                        <div class="grid-item main-item">
+                            <h5>Contenuto Principale</h5>
+                            <p>Area principale del contenuto con layout CSS Grid.</p>
+                        </div>
+                        <div class="grid-item footer-item">Footer</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sezione 5: Animazioni e Transizioni -->
+    <div class="row mb-5">
+        <div class="col-md-12">
+            <div class="demo-section">
+                <h3>5. Animazioni CSS</h3>
+                
+                <div class="animations-showcase">
+                    <div class="animation-item bounce">
+                        <div class="animated-box">Bounce</div>
+                    </div>
+                    
+                    <div class="animation-item rotate">
+                        <div class="animated-box">Rotate</div>
+                    </div>
+                    
+                    <div class="animation-item pulse">
+                        <div class="animated-box">Pulse</div>
+                    </div>
+                    
+                    <div class="animation-item slide">
+                        <div class="animated-box">Slide</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sezione 6: Notifiche e Toast -->
+    <div class="row mb-5">
+        <div class="col-md-12">
+            <div class="demo-section">
+                <h3>6. Sistema di Notifiche</h3>
+                
+                <div class="notification-controls">
+                    <button class="btn-custom-gradient" @onclick="@(() => ShowNotification("success"))">
+                        Notifica Successo
+                    </button>
+                    <button class="btn-custom-neon" @onclick="@(() => ShowNotification("warning"))">
+                        Notifica Warning
+                    </button>
+                    <button class="btn-custom-3d" @onclick="@(() => ShowNotification("error"))">
+                        Notifica Errore
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Messaggio di output -->
+    @if (!string.IsNullOrEmpty(outputMessage))
+    {
+        <div class="row">
+            <div class="col-md-12">
+                <div class="alert alert-info fade-in">
+                    <strong>Output:</strong> @outputMessage
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<!-- Container per le notifiche -->
+<div class="notifications-container">
+    @foreach (var notification in notifications)
+    {
+        <div class="notification @notification.Type slide-in">
+            <div class="notification-content">
+                <strong>@notification.Title</strong>
+                <p>@notification.Message</p>
+            </div>
+            <button class="notification-close" @onclick="@(() => RemoveNotification(notification))">×</button>
+        </div>
+    }
+</div>
+
+@code {
+    private string outputMessage = "";
+    private bool isLoading = false;
+    private int progressValue = 75;
+    private int currentCount = 0;
+    private string userName = "";
+    private string userEmail = "";
+    private bool receiveNotifications = true;
+    private int volumeLevel = 50;
+    
+    private List<NotificationModel> notifications = new();
+    private System.Threading.Timer? timer;
+
+    protected override void OnInitialized()
+    {
+        timer = new System.Threading.Timer(UpdateCounter, null, TimeSpan.Zero, TimeSpan.FromSeconds(1));
+    }
+
+    private void UpdateCounter(object? state)
+    {
+        currentCount++;
+        InvokeAsync(StateHasChanged);
+    }
+
+    private void ShowMessage()
+    {
+        outputMessage = $"Pulsante cliccato alle {DateTime.Now:HH:mm:ss}";
+    }
+
+    private async Task SimulateLoading()
+    {
+        isLoading = true;
+        outputMessage = "Caricamento in corso...";
+        StateHasChanged();
+        
+        await Task.Delay(3000);
+        
+        isLoading = false;
+        outputMessage = "Caricamento completato!";
+        StateHasChanged();
+    }
+
+    private void OnInputFocus()
+    {
+        // Gestione focus degli input personalizzati
+    }
+
+    private void OnInputBlur()
+    {
+        // Gestione blur degli input personalizzati
+    }
+
+    private void ToggleNotifications()
+    {
+        receiveNotifications = !receiveNotifications;
+        outputMessage = $"Notifiche: {(receiveNotifications ? "Attivate" : "Disattivate")}";
+    }
+
+    private void ShowNotification(string type)
+    {
+        string title = type switch
+        {
+            "success" => "Successo!",
+            "warning" => "Attenzione!",
+            "error" => "Errore!",
+            _ => "Info"
+        };
+        
+        string message = type switch
+        {
+            "success" => "Operazione completata con successo.",
+            "warning" => "Controlla i dati inseriti.",
+            "error" => "Si è verificato un errore.",
+            _ => "Messaggio informativo."
+        };
+
+        var notification = new NotificationModel
+        {
+            Id = Guid.NewGuid(),
+            Type = type,
+            Title = title,
+            Message = message
+        };
+
+        notifications.Add(notification);
+        StateHasChanged();
+
+        // Rimuovi automaticamente dopo 5 secondi
+        Task.Delay(5000).ContinueWith(_ => RemoveNotification(notification));
+    }
+
+    private void RemoveNotification(NotificationModel notification)
+    {
+        notifications.Remove(notification);
+        InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        timer?.Dispose();
+    }
+
+    private class NotificationModel
+    {
+        public Guid Id { get; set; }
+        public string Type { get; set; } = "";
+        public string Title { get; set; } = "";
+        public string Message { get; set; } = "";
+    }
+}
