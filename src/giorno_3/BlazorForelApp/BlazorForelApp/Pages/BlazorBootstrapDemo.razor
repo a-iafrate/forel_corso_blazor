@@ -91,15 +91,24 @@
                 <div class="card-body">
                     <div class="mb-3">
                         <label class="form-label">Progresso: @progressValue%</label>
-                        <Progress Value="@progressValue" Color="ProgressColor.Primary" />
+                        <Progress Class="mb-3">
+                            <ProgressBar Width="@progressValue" Color="ProgressColor.Primary" />
+                        </Progress>
+                        
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Con strisce</label>
-                        <Progress Value="75" Color="ProgressColor.Success" Striped="true" />
+                        <Progress Class="mb-3">
+                            <ProgressBar Width="@progressValue" Color="ProgressColor.Success" Type="ProgressType.Striped" />
+                        </Progress>
+                        
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Animato</label>
-                        <Progress Value="50" Color="ProgressColor.Info" Striped="true" Animated="true" />
+                        <Progress Class="mb-3">
+                            <ProgressBar Width="@progressValue" Color="ProgressColor.Success" Type="ProgressType.StripedAndAnimated" />
+                        </Progress>
+                        
                     </div>
                     <Button Color="ButtonColor.Primary" @onclick="UpdateProgress">Aggiorna Progresso</Button>
                 </div>
@@ -205,6 +214,9 @@
                 </div>
                 <div class="card-body">
                     <div class="d-flex flex-wrap gap-2">
+                        <Toasts class="p-3" Messages="messages" Placement="ToastsPlacement.TopRight" />
+
+
                         <Button Color="ButtonColor.Success" @onclick="ShowSuccessToast">Toast Successo</Button>
                         <Button Color="ButtonColor.Danger" @onclick="ShowErrorToast">Toast Errore</Button>
                         <Button Color="ButtonColor.Info" @onclick="ShowInfoToast">Toast Info</Button>
@@ -279,6 +291,18 @@
     private int progressValue = 35;
     private bool isLoading = false;
 
+    List<ToastMessage> messages = new List<ToastMessage>();
+
+    private void ShowMessage(ToastType toastType) => messages.Add(CreateToastMessage(toastType));
+
+    private ToastMessage CreateToastMessage(ToastType toastType)
+    => new ToastMessage
+    {
+        Type = toastType,
+        Message = $"Hello, world! This is a simple toast message. DateTime: {DateTime.Now}",
+    };
+
+
     private void OnButtonClick()
     {
         buttonClickCount++;
@@ -289,9 +313,9 @@
     {
         isLoading = true;
         StateHasChanged();
-        
+
         await Task.Delay(2000); // Simula operazione asincrona
-        
+
         isLoading = false;
         buttonClickCount++;
         StateHasChanged();
@@ -318,32 +342,17 @@
 
     private void ShowSuccessToast()
     {
-        toastCount++;
-        ToastService.Notify(new ToastMessage(
-            ToastType.Success, 
-            "Successo!", 
-            "Operazione completata con successo!"
-        ));
+        ShowMessage(ToastType.Success);
     }
 
     private void ShowErrorToast()
     {
-        toastCount++;
-        ToastService.Notify(new ToastMessage(
-            ToastType.Danger, 
-            "Errore!", 
-            "Si è verificato un errore durante l'operazione."
-        ));
+        ShowMessage(ToastType.Danger);
     }
 
     private void ShowInfoToast()
     {
-        toastCount++;
-        ToastService.Notify(new ToastMessage(
-            ToastType.Info, 
-            "Informazione", 
-            "Questo è un messaggio informativo."
-        ));
+        ShowMessage(ToastType.Info);
     }
 
     [Inject] protected ToastService ToastService { get; set; } = default!;
