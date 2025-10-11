@@ -39,11 +39,11 @@
                 <strong>Simulazione:</strong> 
                 @if (Id % 2 == 0)
                 {
-                    <span class="text-success">? ID Pari - Accesso Consentito</span>
+                    <span class="text-success">ID Pari - Accesso Consentito</span>
                 }
                 else
                 {
-                    <span class="text-warning">?? ID Dispari - Modalità Guest</span>
+                    <span class="text-warning">ID Dispari - Modalità Guest</span>
                 }
             </div>
         </div>
@@ -51,15 +51,15 @@
 
     <div class="mt-4">
         <NavLink class="btn btn-primary me-2" href="/navigation-demo">
-            <span class="emoji-icon">??</span> Torna alla Demo
+            Torna alla Demo
         </NavLink>
         <NavLink class="btn btn-success me-2" href="@($"/demo-page-with-param/{Id + 1}")">
-            <span class="emoji-icon">??</span> Prossimo ID (@(Id + 1))
+            Prossimo ID (@(Id + 1))
         </NavLink>
         @if (Id > 1)
         {
             <NavLink class="btn btn-warning" href="@($"/demo-page-with-param/{Id - 1}")">
-                <span class="emoji-icon">??</span> ID Precedente (@(Id - 1))
+                ID Precedente (@(Id - 1))
             </NavLink>
         }
     </div>

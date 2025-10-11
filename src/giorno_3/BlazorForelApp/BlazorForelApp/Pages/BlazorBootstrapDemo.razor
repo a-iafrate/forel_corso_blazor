@@ -3,7 +3,7 @@
 <PageTitle>Blazor.Bootstrap Components Demo</PageTitle>
 
 <div class="container-fluid">
-    <h1 class="mb-4">?? Demo Componenti Blazor.Bootstrap</h1>
+    <h1 class="mb-4">Demo Componenti Blazor.Bootstrap</h1>
     <p class="lead text-muted">Panoramica dei principali componenti di Blazor.Bootstrap per il corso</p>
 
     <div class="row g-4">
@@ -11,7 +11,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h3>?? Alert Components</h3>
+                    <h3>Alert Components</h3>
                 </div>
                 <div class="card-body">
                     <Alert Color="AlertColor.Primary" Dismissable="true">
@@ -19,10 +19,10 @@
                         Alert primario con icona e possibilità di chiusura
                     </Alert>
                     <Alert Color="AlertColor.Success">
-                        ? Operazione completata con successo!
+                        Operazione completata con successo!
                     </Alert>
                     <Alert Color="AlertColor.Warning">
-                        ?? Attenzione: questo è un messaggio di avviso
+                        Attenzione: questo è un messaggio di avviso
                     </Alert>
                 </div>
             </div>
@@ -32,7 +32,7 @@
         <div class="col-lg-6">
             <div class="card">
                 <div class="card-header">
-                    <h3>?? Button Components</h3>
+                    <h3>Button Components</h3>
                 </div>
                 <div class="card-body">
                     <div class="d-flex flex-wrap gap-2 mb-3">
@@ -64,7 +64,7 @@
         <div class="col-lg-6">
             <div class="card">
                 <div class="card-header">
-                    <h3>??? Badge Components</h3>
+                    <h3>Badge Components</h3>
                 </div>
                 <div class="card-body">
                     <div class="d-flex flex-wrap gap-2 mb-3">
@@ -86,7 +86,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h3>?? Progress Components</h3>
+                    <h3>Progress Components</h3>
                 </div>
                 <div class="card-body">
                     <div class="mb-3">
@@ -110,7 +110,7 @@
         <div class="col-lg-6">
             <div class="card">
                 <div class="card-header">
-                    <h3>?? Modal Component</h3>
+                    <h3>Modal Component</h3>
                 </div>
                 <div class="card-body">
                     <Button Color="ButtonColor.Primary" @onclick="ShowModal">Mostra Modal</Button>
@@ -133,23 +133,23 @@
         <div class="col-lg-6">
             <div class="card">
                 <div class="card-header">
-                    <h3>?? Accordion Component</h3>
+                    <h3>Accordion Component</h3>
                 </div>
                 <div class="card-body">
                     <Accordion>
-                        <AccordionItem Title="?? Sezione Uno" Name="item1">
+                        <AccordionItem Title="Sezione Uno" Name="item1">
                             <Content>
                                 Contenuto della prima sezione dell'accordion.
                                 Molto utile per organizzare contenuti lunghi!
                             </Content>
                         </AccordionItem>
-                        <AccordionItem Title="?? Sezione Due" Name="item2">
+                        <AccordionItem Title="Sezione Due" Name="item2">
                             <Content>
                                 Contenuto della seconda sezione.
                                 Ogni sezione può essere espansa indipendentemente.
                             </Content>
                         </AccordionItem>
-                        <AccordionItem Title="?? Sezione Tre" Name="item3">
+                        <AccordionItem Title="Sezione Tre" Name="item3">
                             <Content>
                                 Ultima sezione con contenuto di esempio.
                                 Perfetto per FAQ o documentazione!
@@ -164,18 +164,18 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h3>?? Tabs Component</h3>
+                    <h3>Tabs Component</h3>
                 </div>
                 <div class="card-body">
                     <Tabs>
-                        <Tab Title="?? Home" Name="home">
+                        <Tab Title="Home" Name="home">
                             <Content>
                                 <h4>Contenuto della tab Home</h4>
                                 <p>Questa è la prima tab con contenuto di esempio.</p>
                                 <Button Color="ButtonColor.Primary" Size="ButtonSize.Small">Azione Home</Button>
                             </Content>
                         </Tab>
-                        <Tab Title="?? Profilo" Name="profile">
+                        <Tab Title="Profilo" Name="profile">
                             <Content>
                                 <h4>Contenuto della tab Profilo</h4>
                                 <p>Informazioni del profilo utente vanno qui.</p>
@@ -185,7 +185,7 @@
                                 </div>
                             </Content>
                         </Tab>
-                        <Tab Title="?? Impostazioni" Name="settings">
+                        <Tab Title="Impostazioni" Name="settings">
                             <Content>
                                 <h4>Contenuto della tab Impostazioni</h4>
                                 <p>Configurazioni e preferenze dell'applicazione.</p>
@@ -201,7 +201,7 @@
         <div class="col-lg-6">
             <div class="card">
                 <div class="card-header">
-                    <h3>?? Toast Component</h3>
+                    <h3>Toast Component</h3>
                 </div>
                 <div class="card-body">
                     <div class="d-flex flex-wrap gap-2">
@@ -217,7 +217,7 @@
         <div class="col-lg-6">
             <div class="card">
                 <div class="card-header">
-                    <h3>? Spinner Component</h3>
+                    <h3>Spinner Component</h3>
                 </div>
                 <div class="card-body">
                     <div class="d-flex flex-wrap gap-3 align-items-center">
@@ -234,7 +234,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h3>?? Statistiche Interazioni</h3>
+                    <h3>Statistiche Interazioni</h3>
                 </div>
                 <div class="card-body">
                     <div class="row text-center">
@@ -322,7 +322,7 @@
         ToastService.Notify(new ToastMessage(
             ToastType.Success, 
             "Successo!", 
-            "Operazione completata con successo! ??"
+            "Operazione completata con successo!"
         ));
     }
 
@@ -332,7 +332,7 @@
         ToastService.Notify(new ToastMessage(
             ToastType.Danger, 
             "Errore!", 
-            "Si è verificato un errore durante l'operazione. ?"
+            "Si è verificato un errore durante l'operazione."
         ));
     }
 
@@ -342,7 +342,7 @@
         ToastService.Notify(new ToastMessage(
             ToastType.Info, 
             "Informazione", 
-            "Questo è un messaggio informativo. ??"
+            "Questo è un messaggio informativo."
         ));
     }
 

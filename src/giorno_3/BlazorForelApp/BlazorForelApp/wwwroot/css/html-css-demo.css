@@ -610,12 +610,12 @@
 
 /* ===== ICONE PERSONALIZZATE ===== */
 .icon-star:before {
-    content: "⭐";
+    content: "★";
     font-size: 2rem;
 }
 
 .icon-glass:before {
-    content: "🔮";
+    content: "◊";
     font-size: 2rem;
 }
 
