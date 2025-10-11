@@ -1,13 +1,17 @@
 ﻿@page "/storage"
 @using Blazored.LocalStorage
+@using Blazored.SessionStorage
+@using BlazorForelApp.Services
 @inject ILocalStorageService LocalStorage
+@inject ISessionStorageService SessionStorage
+@inject ICookieService CookieService
 @inject IJSRuntime JS
 
-<PageTitle>Sessions Storage</PageTitle>
+<PageTitle>Storage Examples</PageTitle>
 
-<h1>LocalStorage e ProtectedLocalStorage</h1>
+<h1>LocalStorage, SessionStorage e Cookie</h1>
 
-<p>Questo componente dimostra l'uso di localStorage con Blazored.LocalStorage e un esempio di storage protetto.</p>
+<p>Questo componente dimostra l'uso di diverse tecnologie di storage nel browser con librerie Blazor.</p>
 
 <div class="row">
     <div class="col-md-6">
@@ -34,7 +38,32 @@
     </div>
 
     <div class="col-md-6">
-        <h3>Oggetti Complessi</h3>
+        <h3>SessionStorage (Blazored.SessionStorage)</h3>
+        <div class="mb-3">
+            <label class="form-label">Chiave:</label>
+            <input @bind="sessionStorageKey" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Valore:</label>
+            <input @bind="sessionStorageValue" class="form-control" />
+        </div>
+        <button @onclick="SaveToSessionStorage" class="btn btn-primary">Salva in SessionStorage</button>
+        <button @onclick="LoadFromSessionStorage" class="btn btn-secondary">Carica da SessionStorage</button>
+        <button @onclick="RemoveFromSessionStorage" class="btn btn-danger">Rimuovi da SessionStorage</button>
+        <button @onclick="ClearAllSessionStorage" class="btn btn-warning">Cancella Tutto</button>
+        
+        @if (!string.IsNullOrEmpty(sessionStorageResult))
+        {
+            <div class="alert alert-primary mt-3">
+                <strong>Risultato:</strong> @sessionStorageResult
+            </div>
+        }
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <h3>Oggetti Complessi (LocalStorage)</h3>
         <div class="mb-3">
             <label class="form-label">Nome Utente:</label>
             <input @bind="userData.Username" class="form-control" />
@@ -58,10 +87,37 @@
             </div>
         }
     </div>
+
+    <div class="col-md-6">
+        <h3>Cookie (Custom Service)</h3>
+        <div class="mb-3">
+            <label class="form-label">Nome Cookie:</label>
+            <input @bind="cookieName" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Valore Cookie:</label>
+            <input @bind="cookieValue" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Giorni di Scadenza:</label>
+            <input @bind="cookieExpireDays" type="number" class="form-control" placeholder="Lascia vuoto per cookie di sessione" />
+        </div>
+        <button @onclick="SaveCookie" class="btn btn-primary">Salva Cookie</button>
+        <button @onclick="LoadCookie" class="btn btn-secondary">Carica Cookie</button>
+        <button @onclick="DeleteCookie" class="btn btn-danger">Elimina Cookie</button>
+        <button @onclick="LoadAllCookies" class="btn btn-info">Mostra Tutti i Cookie</button>
+        
+        @if (!string.IsNullOrEmpty(cookieResult))
+        {
+            <div class="alert alert-warning mt-3">
+                <strong>Risultato:</strong> @cookieResult
+            </div>
+        }
+    </div>
 </div>
 
 <div class="row mt-4">
-    <div class="col-md-12">
+    <div class="col-md-6">
         <h3>Storage Protetto (Simulato con Base64)</h3>
         <div class="mb-3">
             <label class="form-label">Chiave:</label>
@@ -77,8 +133,34 @@
         
         @if (!string.IsNullOrEmpty(protectedStorageResult))
         {
-            <div class="alert alert-warning mt-3">
+            <div class="alert alert-dark mt-3">
                 <strong>Risultato:</strong> @protectedStorageResult
+            </div>
+        }
+    </div>
+
+    <div class="col-md-6">
+        <h3>Cookie Oggetti Complessi</h3>
+        <div class="mb-3">
+            <label class="form-label">Nome Prodotto:</label>
+            <input @bind="productData.Name" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Prezzo:</label>
+            <input @bind="productData.Price" type="number" step="0.01" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Categoria:</label>
+            <input @bind="productData.Category" class="form-control" />
+        </div>
+        <button @onclick="SaveProductCookie" class="btn btn-primary">Salva Prodotto (Cookie)</button>
+        <button @onclick="LoadProductCookie" class="btn btn-secondary">Carica Prodotto</button>
+        <button @onclick="DeleteProductCookie" class="btn btn-danger">Elimina Prodotto</button>
+        
+        @if (!string.IsNullOrEmpty(productCookieResult))
+        {
+            <div class="alert alert-success mt-3">
+                <strong>Risultato:</strong> @productCookieResult
             </div>
         }
     </div>
@@ -87,10 +169,11 @@
 <div class="mt-4">
     <h4>Note:</h4>
     <ul>
-        <li><strong>Blazored.LocalStorage:</strong> Libreria type-safe per gestire localStorage senza JSInterop diretto.</li>
-        <li><strong>Supporto Oggetti:</strong> Serializza/deserializza automaticamente oggetti complessi in JSON.</li>
-        <li><strong>Storage Protetto:</strong> Per Blazor WebAssembly, la vera crittografia lato client è limitata. Questo esempio usa Base64 come dimostrazione.</li>
-        <li><strong>Metodi Asincroni:</strong> Tutti i metodi sono async per migliori performance.</li>
+        <li><strong>LocalStorage:</strong> Persiste fino alla cancellazione manuale. Ideale per preferenze utente.</li>
+        <li><strong>SessionStorage:</strong> Persiste solo per la sessione del browser. Ideale per dati temporanei.</li>
+        <li><strong>Cookie:</strong> Persiste secondo la scadenza impostata. Inviati automaticamente al server.</li>
+        <li><strong>Blazored Libraries:</strong> Forniscono API type-safe e supporto per oggetti complessi.</li>
+        <li><strong>Custom Cookie Service:</strong> Wrapper attorno a JavaScript interop per gestire i cookie.</li>
     </ul>
 </div>
 
@@ -100,9 +183,24 @@
     private string localStorageValue = "myValue";
     private string? localStorageResult;
 
+    // SessionStorage variables
+    private string sessionStorageKey = "mySessionKey";
+    private string sessionStorageValue = "mySessionValue";
+    private string? sessionStorageResult;
+
     // User data variables
     private UserData userData = new() { Username = "Mario", Email = "mario@example.com", Age = 30 };
     private string? userDataResult;
+
+    // Cookie variables
+    private string cookieName = "myCookie";
+    private string cookieValue = "myCookieValue";
+    private int? cookieExpireDays = 7;
+    private string? cookieResult;
+
+    // Product cookie variables
+    private ProductData productData = new() { Name = "Laptop", Price = 999.99m, Category = "Electronics" };
+    private string? productCookieResult;
 
     // Protected storage variables
     private string protectedStorageKey = "myProtectedKey";
@@ -170,7 +268,68 @@
         }
     }
 
-    // Complex object methods
+    // SessionStorage methods (Blazored.SessionStorage)
+    private async Task SaveToSessionStorage()
+    {
+        try
+        {
+            await SessionStorage.SetItemAsStringAsync(sessionStorageKey, sessionStorageValue);
+            sessionStorageResult = $"Salvato: '{sessionStorageKey}' = '{sessionStorageValue}'";
+        }
+        catch (Exception ex)
+        {
+            sessionStorageResult = $"Errore: {ex.Message}";
+        }
+    }
+
+    private async Task LoadFromSessionStorage()
+    {
+        try
+        {
+            var value = await SessionStorage.GetItemAsStringAsync(sessionStorageKey);
+            if (value != null)
+            {
+                sessionStorageValue = value;
+                sessionStorageResult = $"Caricato: '{sessionStorageKey}' = '{value}'";
+            }
+            else
+            {
+                sessionStorageResult = $"Chiave '{sessionStorageKey}' non trovata";
+            }
+        }
+        catch (Exception ex)
+        {
+            sessionStorageResult = $"Errore: {ex.Message}";
+        }
+    }
+
+    private async Task RemoveFromSessionStorage()
+    {
+        try
+        {
+            await SessionStorage.RemoveItemAsync(sessionStorageKey);
+            sessionStorageResult = $"Rimosso: '{sessionStorageKey}'";
+        }
+        catch (Exception ex)
+        {
+            sessionStorageResult = $"Errore: {ex.Message}";
+        }
+    }
+
+    private async Task ClearAllSessionStorage()
+    {
+        try
+        {
+            await SessionStorage.ClearAsync();
+            sessionStorageResult = "SessionStorage completamente svuotato";
+        }
+        catch (Exception ex)
+        {
+            sessionStorageResult = $"Errore: {ex.Message}";
+        }
+    }
+
+    // Complex object methods (LocalStorage)
     private async Task SaveUserData()
     {
         try
@@ -215,6 +374,117 @@
         catch (Exception ex)
         {
             userDataResult = $"Errore: {ex.Message}";
+        }
+    }
+
+    // Cookie methods (Custom Service)
+    private async Task SaveCookie()
+    {
+        try
+        {
+            await CookieService.SetCookieAsync(cookieName, cookieValue, cookieExpireDays);
+            var expiryText = cookieExpireDays.HasValue ? $" (scade in {cookieExpireDays} giorni)" : " (cookie di sessione)";
+            cookieResult = $"Salvato cookie: '{cookieName}' = '{cookieValue}'{expiryText}";
+        }
+        catch (Exception ex)
+        {
+            cookieResult = $"Errore: {ex.Message}";
+        }
+    }
+
+    private async Task LoadCookie()
+    {
+        try
+        {
+            var value = await CookieService.GetCookieAsync(cookieName);
+            if (value != null)
+            {
+                cookieValue = value;
+                cookieResult = $"Caricato cookie: '{cookieName}' = '{value}'";
+            }
+            else
+            {
+                cookieResult = $"Cookie '{cookieName}' non trovato";
+            }
+        }
+        catch (Exception ex)
+        {
+            cookieResult = $"Errore: {ex.Message}";
+        }
+    }
+
+    private async Task DeleteCookie()
+    {
+        try
+        {
+            await CookieService.DeleteCookieAsync(cookieName);
+            cookieResult = $"Cookie '{cookieName}' eliminato";
+        }
+        catch (Exception ex)
+        {
+            cookieResult = $"Errore: {ex.Message}";
+        }
+    }
+
+    private async Task LoadAllCookies()
+    {
+        try
+        {
+            var cookieNames = await CookieService.GetAllCookieNamesAsync();
+            var cookieList = string.Join(", ", cookieNames);
+            cookieResult = $"Cookie presenti: {(cookieNames.Any() ? cookieList : "Nessun cookie trovato")}";
+        }
+        catch (Exception ex)
+        {
+            cookieResult = $"Errore: {ex.Message}";
+        }
+    }
+
+    // Product cookie methods
+    private async Task SaveProductCookie()
+    {
+        try
+        {
+            await CookieService.SetCookieAsync("productData", productData, 30);
+            productCookieResult = $"Salvato prodotto: {productData.Name}, €{productData.Price:F2}, {productData.Category}";
+        }
+        catch (Exception ex)
+        {
+            productCookieResult = $"Errore: {ex.Message}";
+        }
+    }
+
+    private async Task LoadProductCookie()
+    {
+        try
+        {
+            var loadedProduct = await CookieService.GetCookieAsync<ProductData>("productData");
+            if (loadedProduct != null)
+            {
+                productData = loadedProduct;
+                productCookieResult = $"Caricato: {productData.Name}, €{productData.Price:F2}, {productData.Category}";
+            }
+            else
+            {
+                productCookieResult = "Nessun dato prodotto trovato";
+            }
+        }
+        catch (Exception ex)
+        {
+            productCookieResult = $"Errore: {ex.Message}";
+        }
+    }
+
+    private async Task DeleteProductCookie()
+    {
+        try
+        {
+            await CookieService.DeleteCookieAsync("productData");
+            productCookieResult = "Dati prodotto eliminati dal cookie";
+        }
+        catch (Exception ex)
+        {
+            productCookieResult = $"Errore: {ex.Message}";
         }
     }
 
@@ -270,11 +540,18 @@
         }
     }
 
-    // Classe per oggetti complessi
+    // Classi per oggetti complessi
     public class UserData
     {
         public string Username { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public int Age { get; set; }
+    }
+
+    public class ProductData
+    {
+        public string Name { get; set; } = string.Empty;
+        public decimal Price { get; set; }
+        public string Category { get; set; } = string.Empty;
     }
 }

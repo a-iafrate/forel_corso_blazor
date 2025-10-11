@@ -26,6 +26,43 @@
         <a href="." class="reload">Reload</a>
         <span class="dismiss">🗙</span>
     </div>
+    
+    <script>
+        // Funzioni JavaScript per gestire i cookie
+        window.getCookie = (name) => {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+            return null;
+        };
+
+        window.setCookie = (name, value, expireDays) => {
+            let expires = "";
+            if (expireDays) {
+                const date = new Date();
+                date.setTime(date.getTime() + (expireDays * 24 * 60 * 60 * 1000));
+                expires = "; expires=" + date.toUTCString();
+            }
+            document.cookie = name + "=" + (value || "") + expires + "; path=/";
+        };
+
+        window.deleteCookie = (name) => {
+            document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/';
+        };
+
+        window.getAllCookieNames = () => {
+            const cookies = document.cookie.split(';');
+            const names = [];
+            for (let cookie of cookies) {
+                const parts = cookie.trim().split('=');
+                if (parts.length > 0 && parts[0]) {
+                    names.push(parts[0]);
+                }
+            }
+            return names;
+        };
+    </script>
+    
     <script src="_framework/blazor.webassembly.js"></script>
 </body>
 
