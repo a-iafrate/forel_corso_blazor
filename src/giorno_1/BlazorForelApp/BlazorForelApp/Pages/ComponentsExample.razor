@@ -1,0 +1,221 @@
+@page "/components"
+@using BlazorForelApp.Components
+
+<PageTitle>Componenti Personalizzati</PageTitle>
+
+<div class="container-fluid">
+    <h1 class="mb-4">
+        <i class="bi bi-puzzle"></i> Esempi di Componenti Personalizzati
+    </h1>
+    
+    <div class="alert alert-info">
+        <h5><i class="bi bi-info-circle"></i> Cosa imparerai:</h5>
+        <ul class="mb-0">
+            <li>Come creare componenti riutilizzabili</li>
+            <li>Come passare parametri ai componenti</li>
+            <li>Come gestire eventi tra componenti</li>
+            <li>Come mantenere lo stato interno di un componente</li>
+        </ul>
+    </div>
+
+    <!-- Sezione PersonCard -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <h2><i class="bi bi-person-badge"></i> Componente PersonCard</h2>
+            <p>Un componente che mostra informazioni di una persona con interazioni.</p>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-4">
+            <PersonCard Name="Mario Rossi"
+                       Age="35"
+                       Email="mario.rossi@email.com"
+                       Role="Sviluppatore Senior"
+                       Description="Esperto in .NET e Blazor con 10 anni di esperienza"
+                       ShowClickCount="true"
+                       OnContact="HandleContact"
+                       OnViewProfile="HandleViewProfile" />
+        </div>
+        
+        <div class="col-md-4">
+            <PersonCard Name="Anna Verdi"
+                       Age="28"
+                       Email="anna.verdi@email.com"
+                       Role="Designer UX/UI"
+                       Description="Specializzata in design systems e user experience"
+                       ShowClickCount="true"
+                       OnContact="HandleContact"
+                       OnViewProfile="HandleViewProfile" />
+        </div>
+        
+        <div class="col-md-4">
+            <PersonCard Name="Luca Bianchi"
+                       Age="42"
+                       Email="luca.bianchi@email.com"
+                       Role="Project Manager"
+                       OnContact="HandleContact"
+                       OnViewProfile="HandleViewProfile" />
+        </div>
+    </div>
+
+    <!-- Sezione CustomCounter -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <h2><i class="bi bi-calculator"></i> Componente CustomCounter</h2>
+            <p>Contatori personalizzabili con diversi parametri e stili.</p>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-3">
+            <CustomCounter Label="Contatore Base"
+                          InitialValue="5"
+                          MinValue="0"
+                          MaxValue="20"
+                          Step="1"
+                          OnValueChanged="HandleCounterChanged" />
+        </div>
+        
+        <div class="col-md-3">
+            <CustomCounter Label="Step Grande"
+                          InitialValue="50"
+                          MinValue="0"
+                          MaxValue="200"
+                          Step="10"
+                          ShowStep="true"
+                          OnValueChanged="HandleCounterChanged" />
+        </div>
+        
+        <div class="col-md-3">
+            <CustomCounter Label="Range Limitato"
+                          InitialValue="5"
+                          MinValue="0"
+                          MaxValue="10"
+                          Step="1"
+                          ShowStep="true"
+                          OnValueChanged="HandleCounterChanged" />
+        </div>
+        
+        <div class="col-md-3">
+            <CustomCounter Label="Percentuale"
+                          InitialValue="0"
+                          MinValue="0"
+                          MaxValue="100"
+                          Step="5"
+                          ShowStep="true"
+                          OnValueChanged="HandleCounterChanged" />
+        </div>
+    </div>
+
+    <!-- Log delle azioni -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <h3><i class="bi bi-list-ul"></i> Log delle Azioni</h3>
+            <div class="card">
+                <div class="card-body" style="max-height: 200px; overflow-y: auto;">
+                    @if (actionLog.Count == 0)
+                    {
+                        <p class="text-muted mb-0">Nessuna azione registrata. Interagisci con i componenti sopra!</p>
+                    }
+                    else
+                    {
+                        @foreach (var action in actionLog.TakeLast(10).Reverse())
+                        {
+                            <div class="d-flex justify-content-between border-bottom py-1">
+                                <span>@action.Message</span>
+                                <small class="text-muted">@action.Timestamp.ToString("HH:mm:ss")</small>
+                            </div>
+                        }
+                    }
+                </div>
+                <div class="card-footer">
+                    <button class="btn btn-outline-danger btn-sm" @onclick="ClearLog">
+                        <i class="bi bi-trash"></i> Pulisci Log
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sezione di spiegazione del codice -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <h3><i class="bi bi-code-slash"></i> Concetti Chiave</h3>
+            <div class="accordion" id="conceptsAccordion">
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#parameters">
+                            Parametri del Componente [Parameter]
+                        </button>
+                    </h2>
+                    <div id="parameters" class="accordion-collapse collapse" data-bs-parent="#conceptsAccordion">
+                        <div class="accordion-body">
+                            <p>I parametri permettono di passare dati al componente dal parent:</p>
+                            <pre><code>[Parameter] public string Name { get; set; } = "Default";</code></pre>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#events">
+                            Eventi [EventCallback]
+                        </button>
+                    </h2>
+                    <div id="events" class="accordion-collapse collapse" data-bs-parent="#conceptsAccordion">
+                        <div class="accordion-body">
+                            <p>Gli eventi permettono la comunicazione dal figlio al parent:</p>
+                            <pre><code>[Parameter] public EventCallback&lt;string&gt; OnContact { get; set; }</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    // Lista per il log delle azioni
+    private List<ActionLogEntry> actionLog = new();
+    
+    // Gestori degli eventi dei componenti PersonCard
+    private void HandleContact(string message)
+    {
+        AddToLog($"?? {message}");
+    }
+    
+    private void HandleViewProfile(string message)
+    {
+        AddToLog($"??? {message}");
+    }
+    
+    // Gestore dell'evento del componente CustomCounter
+    private void HandleCounterChanged(int newValue)
+    {
+        AddToLog($"?? Contatore cambiato: {newValue}");
+    }
+    
+    // Metodi di supporto
+    private void AddToLog(string message)
+    {
+        actionLog.Add(new ActionLogEntry
+        {
+            Message = message,
+            Timestamp = DateTime.Now
+        });
+        StateHasChanged(); // Forza il re-render
+    }
+    
+    private void ClearLog()
+    {
+        actionLog.Clear();
+    }
+    
+    // Classe per le voci del log
+    private class ActionLogEntry
+    {
+        public string Message { get; set; } = "";
+        public DateTime Timestamp { get; set; }
+    }
+}

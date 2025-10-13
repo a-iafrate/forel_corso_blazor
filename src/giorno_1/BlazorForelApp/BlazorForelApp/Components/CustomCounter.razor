@@ -1,0 +1,131 @@
+@* Componente contatore personalizzato con stile *@
+
+<div class="custom-counter">
+    <div class="counter-display">
+        <div class="counter-label">@Label</div>
+        <div class="counter-value @GetCounterClass()">@CurrentValue</div>
+    </div>
+    
+    <div class="counter-controls">
+        <button class="btn btn-danger btn-sm" @onclick="Decrement" disabled="@(CurrentValue <= MinValue)">
+            <i class="bi bi-dash-circle"></i>
+        </button>
+        
+        <button class="btn btn-secondary btn-sm" @onclick="Reset">
+            <i class="bi bi-arrow-clockwise"></i>
+        </button>
+        
+        <button class="btn btn-success btn-sm" @onclick="Increment" disabled="@(CurrentValue >= MaxValue)">
+            <i class="bi bi-plus-circle"></i>
+        </button>
+    </div>
+    
+    @if (ShowStep)
+    {
+        <div class="step-info">
+            <small class="text-muted">Step: @Step</small>
+        </div>
+    }
+</div>
+
+<style>
+    .custom-counter {
+        border: 2px solid #e9ecef;
+        border-radius: 8px;
+        padding: 20px;
+        text-align: center;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        margin: 10px;
+        min-width: 200px;
+    }
+    
+    .counter-display {
+        margin-bottom: 15px;
+    }
+    
+    .counter-label {
+        font-size: 14px;
+        font-weight: bold;
+        color: #6c757d;
+        margin-bottom: 5px;
+    }
+    
+    .counter-value {
+        font-size: 2rem;
+        font-weight: bold;
+        transition: all 0.3s ease;
+    }
+    
+    .counter-low { color: #dc3545; }
+    .counter-normal { color: #198754; }
+    .counter-high { color: #fd7e14; }
+    
+    .counter-controls {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .step-info {
+        margin-top: 10px;
+    }
+</style>
+
+@code {
+    // Parametri configurabili
+    [Parameter] public string Label { get; set; } = "Contatore";
+    [Parameter] public int InitialValue { get; set; } = 0;
+    [Parameter] public int MinValue { get; set; } = 0;
+    [Parameter] public int MaxValue { get; set; } = 100;
+    [Parameter] public int Step { get; set; } = 1;
+    [Parameter] public bool ShowStep { get; set; } = false;
+    
+    // Eventi
+    [Parameter] public EventCallback<int> OnValueChanged { get; set; }
+    
+    // Stato interno
+    public int CurrentValue { get; private set; }
+    
+    // Inizializzazione del componente
+    protected override void OnInitialized()
+    {
+        CurrentValue = InitialValue;
+    }
+    
+    // Metodi del componente
+    private async Task Increment()
+    {
+        if (CurrentValue < MaxValue)
+        {
+            CurrentValue += Step;
+            await OnValueChanged.InvokeAsync(CurrentValue);
+        }
+    }
+    
+    private async Task Decrement()
+    {
+        if (CurrentValue > MinValue)
+        {
+            CurrentValue -= Step;
+            await OnValueChanged.InvokeAsync(CurrentValue);
+        }
+    }
+    
+    private async Task Reset()
+    {
+        CurrentValue = InitialValue;
+        await OnValueChanged.InvokeAsync(CurrentValue);
+    }
+    
+    private string GetCounterClass()
+    {
+        var percentage = (double)(CurrentValue - MinValue) / (MaxValue - MinValue);
+        if (percentage < 0.3)
+            return "counter-low";
+        else if (percentage > 0.7)
+            return "counter-high";
+        else
+            return "counter-normal";
+    }
+}
