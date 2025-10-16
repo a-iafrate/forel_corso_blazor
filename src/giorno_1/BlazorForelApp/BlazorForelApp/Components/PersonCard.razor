@@ -40,6 +40,7 @@
 
 @code {
     // Parametri del componente (proprietà che possono essere passate dal parent)
+    [Parameter] public List<string> IsTest { get; set; }
     [Parameter] public string Name { get; set; } = "Nome non specificato";
     [Parameter] public int Age { get; set; } = 0;
     [Parameter] public string Email { get; set; } = "";

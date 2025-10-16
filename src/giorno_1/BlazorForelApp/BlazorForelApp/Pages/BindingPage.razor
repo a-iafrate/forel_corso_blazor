@@ -1,21 +1,28 @@
 ﻿@page "/binding"
+@inject IJSRuntime JsRuntime
 
 <PageTitle>Counter</PageTitle>
 
 <h1>Counter</h1>
 <p role="status">Componente di sistema blazor</p>
-<InputText @bind-Value="testo"></InputText>
+<InputText @bind-Value="testo"  ></InputText>
 <p role="status">Binding su controllo</p>
-<input type="text" @bind-value="@testo" />
+<input  type="text" @bind-value="@testo" />
 <p role="status">Proprietà di base</p>
-<input type="text" value="@testo" />
-<p role="status">Current text: @testo</p>
+<input id="testinput" type="text" value="@testo" />
+<p role="status" >Current text: @testo</p>
 
 <p role="status">Current count: @currentCount</p>
 <button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
 @for (int i = 1; i <= currentCount; i++)
 {
     <p>This is paragraph number @i</p>
+}
+
+
+@for (int i = 1; i <= currentCount; i++)
+{
+    <p>test @i</p>
 }
 
 <hr />
@@ -27,17 +34,21 @@
 
 <hr />
 <h2>Binding su Checkbox</h2>
+
 <p>
     <InputCheckbox @bind-Value="isChecked" /> Accettato: @isChecked
 </p>
 
-<hr />
-<h2>Binding su Select</h2>
-<select @bind="selectedColor">
-    <option value="Rosso">Rosso</option>
-    <option value="Verde">Verde</option>
-    <option value="Blu">Blu</option>
-</select>
+@if (!isChecked)
+{
+    <hr />
+    <h2>Binding su Select</h2>
+    <select @bind="selectedColor">
+        <option value="Rosso">Rosso</option>
+        <option value="Verde">Verde</option>
+        <option value="Blu">Blu</option>
+    </select>
+}
 <p>Colore selezionato: @selectedColor</p>
 
 <hr />
@@ -46,9 +57,27 @@
 <p>Via: <InputText @bind-Value="persona.Indirizzo.Via" /></p>
 <p>Indirizzo: @persona.Indirizzo.Via, @persona.Indirizzo.Citta</p>
 
+<button @onclick="ShowAlert">Show Alert</button>
+
+<script>
+    function getVal(){
+        var in=document.getElementById("testinput");
+        alert(in.innerHTML);
+    }
+</script>
+
 @code {
+   private async Task ShowAlert()
+   {    
+       var res=await JsRuntime.InvokeAsync<string>("test");
+       await JsRuntime.InvokeVoidAsync("alert", res);
+       await JsRuntime.InvokeVoidAsync("confirm", res);
+   }
+
     private int currentCount = 0;
-    private string testo = "prova1";    
+    private string testo = "prova1"; 
+    private bool isChecked = false;
+
     private void IncrementCount()
     {
         currentCount++;
@@ -62,7 +91,7 @@
         Indirizzo = new Indirizzo { Citta = "Roma", Via = "Via Roma 1" }
     };
 
-    private bool isChecked = false;
+    
     private string selectedColor = "Rosso";
 
     public class Persona
