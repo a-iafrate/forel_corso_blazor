@@ -32,8 +32,9 @@
             .WithAutomaticReconnect()
             .Build();
 
-        hubConnection.On<string, string>("ReceiveMessage", (user, message) =>
+        hubConnection.On<string, string,string>("ReceiveMessage", (user, message,message2) =>
         {
+            
             messages.Add($"{user}: {message}");
             StateHasChanged();
         });
@@ -46,6 +47,7 @@
         if (hubConnection is not null)
         {
             await hubConnection.SendAsync("SendMessage", user, message);
+            await hubConnection.SendAsync("AllOK", "103 ok");
             message = string.Empty;
         }
     }

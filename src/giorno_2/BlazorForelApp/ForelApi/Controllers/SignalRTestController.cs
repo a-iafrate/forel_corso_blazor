@@ -18,7 +18,7 @@ namespace ForelApi.Controllers
         [HttpPost("send-test-message")]
         public async Task<IActionResult> SendTestMessage()
         {
-            await _hubContext.Clients.All.SendAsync("ReceiveMessage", "SERVER", "Test SignalR message");
+            await _hubContext.Clients.All.SendAsync("ReceiveMessage", "SERVER", "Test SignalR message","test3");
             return Ok(new { result = "Test message sent" });
         }
     }

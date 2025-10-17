@@ -5,3 +5,12 @@
 <h1>Hello, world!</h1>
 
 Welcome to your new app.
+
+<p role="status">Current theme: @Conf.Theme</p>
+
+@code {
+    [CascadingParameter]
+    public AppConfiguration? Conf { get; set; }
+
+   
+}

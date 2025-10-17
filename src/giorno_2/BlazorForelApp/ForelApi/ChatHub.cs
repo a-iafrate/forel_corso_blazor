@@ -9,5 +9,12 @@ namespace ForelApi
         {
             await Clients.All.SendAsync("ReceiveMessage", "SERVER", $"Message {message} from {user} result:OK");
         }
+
+
+
+        public async Task AllOk(string code)
+        {
+            //
+        }
     }
 }

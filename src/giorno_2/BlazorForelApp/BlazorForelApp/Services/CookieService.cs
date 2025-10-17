@@ -38,6 +38,7 @@ public class CookieService : ICookieService
     {
         try
         {
+            //setCookie(name, value, expireDays)
             await _jsRuntime.InvokeVoidAsync("setCookie", name, value, expireDays);
         }
         catch (Exception ex)
