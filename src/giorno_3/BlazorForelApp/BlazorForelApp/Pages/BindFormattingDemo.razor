@@ -1,0 +1,697 @@
+﻿@page "/bind-formatting-demo"
+
+<PageTitle>Demo @@bind con Formattazione e Conversione</PageTitle>
+
+<link href="css/bind-formatting-demo.css" rel="stylesheet" />
+
+<h1>Demo @@bind con Formattazione e Conversione</h1>
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="alert alert-info">
+                <h4>📚 Obiettivi Didattici</h4>
+                <p>Questa pagina dimostra come utilizzare la direttiva <code>@@bind</code> in Blazor con:</p>
+                <ul>
+                    <li>Formattazione di date, numeri e valute</li>
+                    <li>Conversione personalizzata di tipi</li>
+                    <li>Eventi di binding (@@bind, @@bind:after, @@bind:event)</li>
+                    <li>Validazione e gestione errori</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sezione 1: Binding Base -->
+    <div class="row mb-5">
+        <div class="col-md-12">
+            <div class="demo-section">
+                <h3>1️ Binding Base (Two-Way Data Binding)</h3>
+                <p class="explanation">
+                    Il binding base sincronizza automaticamente il valore tra l'input e la variabile C#.
+                </p>
+                
+                <div class="demo-box">
+                    <div class="form-group">
+                        <label>Nome (binding base):</label>
+                        <input type="text" class="form-control" @bind="nome" />
+                        <small class="form-text text-muted">Usa <code>@@bind="nome"</code></small>
+                    </div>
+                    
+                    <div class="output-box">
+                        <strong>Valore attuale:</strong> <span class="value-display">@nome</span>
+                    </div>
+                </div>
+
+                <div class="code-explanation">
+                    <strong>💡 Spiegazione:</strong>
+                    <pre><code>&lt;input type="text" @@bind="nome" /&gt;</code></pre>
+                    <p>Il binding avviene <strong>on change</strong> (quando l'input perde il focus).</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sezione 2: Binding con Eventi -->
+    <div class="row mb-5">
+        <div class="col-md-12">
+            <div class="demo-section">
+                <h3>2️ Binding con Eventi Personalizzati</h3>
+                <p class="explanation">
+                    Puoi specificare quando il binding deve avvenire usando <code>@@bind:event</code>.
+                </p>
+                
+                <div class="demo-box">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>onchange (default):</label>
+                                <input type="text" class="form-control" @bind="testoOnChange" />
+                                <small class="form-text text-muted">Aggiorna al blur (perde focus)</small>
+                            </div>
+                            <div class="output-box">
+                                <strong>Valore:</strong> @testoOnChange
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>oninput (real-time):</label>
+                                <input type="text" class="form-control" @bind="testoOnInput" @bind:event="oninput" />
+                                <small class="form-text text-muted">Aggiorna ad ogni carattere digitato</small>
+                            </div>
+                            <div class="output-box">
+                                <strong>Valore:</strong> @testoOnInput
+                                <br />
+                                <strong>Lunghezza:</strong> @testoOnInput.Length caratteri
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="code-explanation">
+                    <strong>💡 Spiegazione:</strong>
+                    <pre><code>&lt;input @@bind="testo" @@bind:event="oninput" /&gt;</code></pre>
+                    <p>Con <code>@@bind:event="oninput"</code> il binding avviene ad ogni keystroke.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sezione 3: Formattazione Date -->
+    <div class="row mb-5">
+        <div class="col-md-12">
+            <div class="demo-section">
+                <h3>3️⃣ Formattazione delle Date</h3>
+                <p class="explanation">
+                    Usa <code>@@bind:format</code> per specificare come formattare le date.
+                </p>
+                
+                <div class="demo-box">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Data completa:</label>
+                                <input type="date" class="form-control" @bind="dataSelezionata" />
+                                <small class="form-text text-muted"><code>@@bind="data"</code></small>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Data e ora:</label>
+                                <input type="datetime-local" class="form-control" @bind="dataOraSelezionata" />
+                                <small class="form-text text-muted">datetime-local</small>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Ora:</label>
+                                <input type="time" class="form-control" @bind="oraSelezionata" />
+                                <small class="form-text text-muted">TimeOnly binding</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="output-box mt-3">
+                        <h5>Valori e Formattazioni:</h5>
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Campo</th>
+                                    <th>Valore C#</th>
+                                    <th>Formattato</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Data</td>
+                                    <td><code>@dataSelezionata</code></td>
+                                    <td>@dataSelezionata.ToString("dd/MM/yyyy")</td>
+                                </tr>
+                                <tr>
+                                    <td>Data e Ora</td>
+                                    <td><code>@dataOraSelezionata</code></td>
+                                    <td>@dataOraSelezionata.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                                </tr>
+                                <tr>
+                                    <td>Ora</td>
+                                    <td><code>@oraSelezionata</code></td>
+                                    <td>@oraSelezionata.ToString("HH:mm")</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="code-explanation">
+                    <strong>💡 Formati comuni per le date:</strong>
+                    <ul>
+                        <li><code>yyyy-MM-dd</code> - Per input type="date"</li>
+                        <li><code>yyyy-MM-ddTHH:mm</code> - Per input type="datetime-local"</li>
+                        <li><code>HH:mm</code> - Per input type="time" (TimeOnly in .NET)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sezione 4: Formattazione Numeri -->
+    <div class="row mb-5">
+        <div class="col-md-12">
+            <div class="demo-section">
+                <h3>4️⃣ Formattazione dei Numeri</h3>
+                <p class="explanation">
+                    I numeri possono essere formattati usando culture e formati specifici.
+                </p>
+                
+                <div class="demo-box">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Numero intero:</label>
+                                <input type="number" class="form-control" @bind="numeroIntero" />
+                                <small class="form-text text-muted">int</small>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Numero decimale:</label>
+                                <input type="number" step="0.01" class="form-control" @bind="numeroDecimale" />
+                                <small class="form-text text-muted">decimal</small>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Valuta (€):</label>
+                                <input type="number" step="0.01" class="form-control" @bind="valuta" />
+                                <small class="form-text text-muted">decimal currency</small>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Percentuale:</label>
+                                <input type="number" step="0.1" class="form-control" @bind="percentuale" />
+                                <small class="form-text text-muted">double %</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="output-box mt-3">
+                        <h5>Formattazioni:</h5>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="format-card">
+                                    <div class="format-label">Intero</div>
+                                    <div class="format-value">@numeroIntero.ToString("N0")</div>
+                                    <small>N0 (con separatore migliaia)</small>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="format-card">
+                                    <div class="format-label">Decimale</div>
+                                    <div class="format-value">@numeroDecimale.ToString("N2")</div>
+                                    <small>N2 (2 decimali)</small>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="format-card">
+                                    <div class="format-label">Valuta</div>
+                                    <div class="format-value">@valuta.ToString("C2")</div>
+                                    <small>C2 (currency)</small>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="format-card">
+                                    <div class="format-label">Percentuale</div>
+                                    <div class="format-value">@((percentuale / 100).ToString("P2"))</div>
+                                    <small>P2 (percentage)</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="code-explanation">
+                    <strong>💡 Formati numerici comuni:</strong>
+                    <ul>
+                        <li><code>N0</code> - Numero con separatore migliaia, 0 decimali</li>
+                        <li><code>N2</code> - Numero con 2 decimali</li>
+                        <li><code>C2</code> - Valuta con 2 decimali</li>
+                        <li><code>P2</code> - Percentuale con 2 decimali</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sezione 5: Conversione Personalizzata -->
+    <div class="row mb-5">
+        <div class="col-md-12">
+            <div class="demo-section">
+                <h3>5️⃣ Conversione Personalizzata (Get/Set)</h3>
+                <p class="explanation">
+                    Usa <code>@@bind:get</code> e <code>@@bind:set</code> per controllare completamente la conversione.
+                </p>
+                
+                <div class="demo-box">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Temperatura (°C):</label>
+                                <input type="number" step="0.1" class="form-control" 
+                                       @bind:get="temperaturaCelsius" 
+                                       @bind:set="SetTemperaturaCelsius" />
+                                <small class="form-text text-muted">Inserisci in Celsius</small>
+                            </div>
+                            
+                            <div class="conversion-result">
+                                <div class="result-item">
+                                    <span class="result-label">Celsius:</span>
+                                    <span class="result-value">@temperaturaCelsius.ToString("F1")°C</span>
+                                </div>
+                                <div class="result-item">
+                                    <span class="result-label">Fahrenheit:</span>
+                                    <span class="result-value">@((temperaturaCelsius * 9/5 + 32).ToString("F1"))°F</span>
+                                </div>
+                                <div class="result-item">
+                                    <span class="result-label">Kelvin:</span>
+                                    <span class="result-value">@((temperaturaCelsius + 273.15).ToString("F1"))K</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Testo Maiuscolo (conversione automatica):</label>
+                                <input type="text" class="form-control" 
+                                       @bind:get="testoMaiuscolo" 
+                                       @bind:set="SetTestoMaiuscolo"
+                                       @bind:event="oninput" />
+                                <small class="form-text text-muted">Viene automaticamente convertito in maiuscolo</small>
+                            </div>
+                            
+                            <div class="output-box">
+                                <strong>Valore memorizzato:</strong> @testoMaiuscolo
+                            </div>
+                            
+                            <div class="form-group mt-3">
+                                <label>Codice Fiscale (validazione):</label>
+                                <input type="text" class="form-control @(codiceFiscaleValido ? "is-valid" : (codiceFiscale.Length > 0 ? "is-invalid" : ""))" 
+                                       @bind:get="codiceFiscale" 
+                                       @bind:set="SetCodiceFiscale"
+                                       @bind:event="oninput"
+                                       maxlength="16" />
+                                <small class="form-text text-muted">16 caratteri alfanumerici</small>
+                                @if (!string.IsNullOrEmpty(codiceFiscale))
+                                {
+                                    <div class="@(codiceFiscaleValido ? "valid-feedback" : "invalid-feedback")" style="display: block;">
+                                        @if (codiceFiscaleValido)
+                                        {
+                                            <span>✓ Codice fiscale valido</span>
+                                        }
+                                        else
+                                        {
+                                            <span>✗ Il codice fiscale deve contenere esattamente 16 caratteri alfanumerici</span>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="code-explanation">
+                    <strong>💡 Esempio di conversione personalizzata:</strong>
+                    <pre><code>&lt;input @@bind:get="temperatura" @@bind:set="SetTemperatura" /&gt;
+
+@@code {
+    private double temperatura;
+    
+    private void SetTemperatura(double value)
+    {
+        // Validazione e conversione personalizzata
+        temperatura = Math.Round(value, 1);
+    }
+}</code></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sezione 6: @@bind:after -->
+    <div class="row mb-5">
+        <div class="col-md-12">
+            <div class="demo-section">
+                <h3>6️⃣ Evento @@bind:after (Post-Binding)</h3>
+                <p class="explanation">
+                    <code>@@bind:after</code> viene eseguito dopo che il binding è completato. Utile per validazioni o calcoli.
+                </p>
+                
+                <div class="demo-box">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Prezzo unitario (€):</label>
+                                <input type="number" step="0.01" class="form-control" 
+                                       @bind="prezzoUnitario" 
+                                       @bind:after="CalcolaTotale" />
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Quantità:</label>
+                                <input type="number" class="form-control" 
+                                       @bind="quantita" 
+                                       @bind:after="CalcolaTotale" />
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Sconto (%):</label>
+                                <input type="number" step="1" class="form-control" 
+                                       @bind="scontoPercentuale" 
+                                       @bind:after="CalcolaTotale" />
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="calculation-result">
+                                <h5>Calcolo Automatico</h5>
+                                <div class="calc-item">
+                                    <span>Subtotale:</span>
+                                    <span>@subtotale.ToString("C2")</span>
+                                </div>
+                                <div class="calc-item">
+                                    <span>Sconto:</span>
+                                    <span class="text-danger">-@scontoImporto.ToString("C2")</span>
+                                </div>
+                                <div class="calc-item">
+                                    <span>IVA (22%):</span>
+                                    <span>@iva.ToString("C2")</span>
+                                </div>
+                                <hr />
+                                <div class="calc-item total">
+                                    <strong>TOTALE:</strong>
+                                    <strong>@totale.ToString("C2")</strong>
+                                </div>
+                                
+                                <small class="text-muted mt-2 d-block">
+                                    Ultimo aggiornamento: @ultimoAggiornamentoCalcolo.ToString("HH:mm:ss")
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="code-explanation">
+                    <strong>💡 Uso di @@bind:after:</strong>
+                    <pre><code>&lt;input @@bind="prezzo" @@bind:after="CalcolaTotale" /&gt;
+
+@@code {
+    private void CalcolaTotale()
+    {
+        // Eseguito automaticamente dopo ogni modifica
+        totale = prezzo * quantita;
+    }
+}</code></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sezione 7: Binding con Select/Checkbox/Radio -->
+    <div class="row mb-5">
+        <div class="col-md-12">
+            <div class="demo-section">
+                <h3>7️⃣ Binding con Altri Controlli</h3>
+                <p class="explanation">
+                    Il binding funziona anche con select, checkbox, radio button e altri controlli.
+                </p>
+                
+                <div class="demo-box">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Select (dropdown):</label>
+                                <select class="form-control" @bind="cittaSelezionata">
+                                    <option value="">Seleziona una città</option>
+                                    <option value="Roma">Roma</option>
+                                    <option value="Milano">Milano</option>
+                                    <option value="Napoli">Napoli</option>
+                                    <option value="Torino">Torino</option>
+                                    <option value="Firenze">Firenze</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Checkbox:</label>
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="accetta" @bind="accettaTermini" />
+                                    <label class="form-check-label" for="accetta">
+                                        Accetto i termini e condizioni
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Radio Button:</label>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" id="small" name="size" value="S" @onchange="@(() => tagliaSel = "S")" checked="@(tagliaSel == "S")" />
+                                    <label class="form-check-label" for="small">Small</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" id="medium" name="size" value="M" @onchange="@(() => tagliaSel = "M")" checked="@(tagliaSel == "M")" />
+                                    <label class="form-check-label" for="medium">Medium</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" id="large" name="size" value="L" @onchange="@(() => tagliaSel = "L")" checked="@(tagliaSel == "L")" />
+                                    <label class="form-check-label" for="large">Large</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Multiple Select:</label>
+                                <select class="form-control" size="5" @bind="linguaggioSelezionato">
+                                    <option value="csharp">C#</option>
+                                    <option value="javascript">JavaScript</option>
+                                    <option value="python">Python</option>
+                                    <option value="java">Java</option>
+                                    <option value="typescript">TypeScript</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Range Slider:</label>
+                                <input type="range" class="form-range" min="0" max="100" @bind="valoreSlider" @bind:event="oninput" />
+                                <div class="text-center mt-2">
+                                    <span class="badge bg-primary">@valoreSlider</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="output-box">
+                                <h6>Valori Selezionati:</h6>
+                                <ul class="list-unstyled">
+                                    <li><strong>Città:</strong> @(string.IsNullOrEmpty(cittaSelezionata) ? "Nessuna" : cittaSelezionata)</li>
+                                    <li><strong>Termini:</strong> @(accettaTermini ? "✓ Accettati" : "✗ Non accettati")</li>
+                                    <li><strong>Taglia:</strong> @tagliaSel</li>
+                                    <li><strong>Linguaggio:</strong> @linguaggioSelezionato</li>
+                                    <li><strong>Slider:</strong> @valoreSlider%</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sezione 8: Riepilogo Best Practices -->
+    <div class="row mb-5">
+        <div class="col-md-12">
+            <div class="demo-section best-practices">
+                <h3>📋 Best Practices e Consigli</h3>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="tip-card">
+                            <div class="tip-icon">✅</div>
+                            <div class="tip-content">
+                                <h5>DO - Cosa Fare</h5>
+                                <ul>
+                                    <li>Usa <code>@@bind:event="oninput"</code> per feedback real-time</li>
+                                    <li>Usa <code>@@bind:after</code> per calcoli post-binding</li>
+                                    <li>Valida i dati nel setter con <code>@@bind:get/set</code></li>
+                                    <li>Specifica format per date e numeri</li>
+                                    <li>Gestisci i null con <code>nullable types</code></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="tip-card danger">
+                            <div class="tip-icon">❌</div>
+                            <div class="tip-content">
+                                <h5>DON'T - Cosa Evitare</h5>
+                                <ul>
+                                    <li>Non fare operazioni pesanti nel setter</li>
+                                    <li>Non modificare altre proprietà nel setter (può causare loop)</li>
+                                    <li>Non dimenticare di gestire le eccezioni di conversione</li>
+                                    <li>Non usare <code>oninput</code> se non necessario (performance)</li>
+                                    <li>Non fare binding diretto di proprietà complesse</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="summary-table mt-4">
+                    <h5>Tabella di Riferimento Rapido</h5>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Sintassi</th>
+                                <th>Quando si aggiorna</th>
+                                <th>Uso tipico</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>@@bind="prop"</code></td>
+                                <td>onchange (blur)</td>
+                                <td>Form standard, validazione finale</td>
+                            </tr>
+                            <tr>
+                                <td><code>@@bind:event="oninput"</code></td>
+                                <td>Ad ogni keystroke</td>
+                                <td>Ricerca real-time, contatori caratteri</td>
+                            </tr>
+                            <tr>
+                                <td><code>@@bind:format</code></td>
+                                <td>-</td>
+                                <td>Date, numeri con formato specifico</td>
+                            </tr>
+                            <tr>
+                                <td><code>@@bind:get / @@bind:set</code></td>
+                                <td>Controllato dal setter</td>
+                                <td>Conversioni personalizzate, validazione</td>
+                            </tr>
+                            <tr>
+                                <td><code>@@bind:after</code></td>
+                                <td>Dopo il binding</td>
+                                <td>Calcoli derivati, side effects</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    // Sezione 1: Binding Base
+    private string nome = "Mario Rossi";
+    
+    // Sezione 2: Eventi
+    private string testoOnChange = "";
+    private string testoOnInput = "";
+    
+    // Sezione 3: Date
+    private DateTime dataSelezionata = DateTime.Today;
+    private DateTime dataOraSelezionata = DateTime.Now;
+    private TimeOnly oraSelezionata = TimeOnly.FromDateTime(DateTime.Now);
+    
+    // Sezione 4: Numeri
+    private int numeroIntero = 1234567;
+    private decimal numeroDecimale = 1234.56m;
+    private decimal valuta = 99.99m;
+    private double percentuale = 25.5;
+    
+    // Sezione 5: Conversione Personalizzata
+    private double temperaturaCelsius = 20.0;
+    private string testoMaiuscolo = "";
+    private string codiceFiscale = "";
+    private bool codiceFiscaleValido = false;
+    
+    // Sezione 6: @bind:after
+    private decimal prezzoUnitario = 10.00m;
+    private int quantita = 1;
+    private decimal scontoPercentuale = 0;
+    private decimal subtotale = 0;
+    private decimal scontoImporto = 0;
+    private decimal iva = 0;
+    private decimal totale = 0;
+    private DateTime ultimoAggiornamentoCalcolo = DateTime.Now;
+    
+    // Sezione 7: Altri controlli
+    private string cittaSelezionata = "";
+    private bool accettaTermini = false;
+    private string tagliaSel = "M";
+    private string linguaggioSelezionato = "csharp";
+    private int valoreSlider = 50;
+    
+    // Metodi Sezione 5
+    private void SetTemperaturaCelsius(double value)
+    {
+        temperaturaCelsius = Math.Round(value, 1);
+    }
+    
+    private void SetTestoMaiuscolo(string value)
+    {
+        testoMaiuscolo = value.ToUpper();
+    }
+    
+    private void SetCodiceFiscale(string value)
+    {
+        codiceFiscale = value.ToUpper();
+        // Validazione semplice: 16 caratteri alfanumerici
+        codiceFiscaleValido = System.Text.RegularExpressions.Regex.IsMatch(
+            codiceFiscale, 
+            @"^[A-Z0-9]{16}$"
+        );
+    }
+    
+    // Metodi Sezione 6
+    private void CalcolaTotale()
+    {
+        subtotale = prezzoUnitario * quantita;
+        scontoImporto = subtotale * (scontoPercentuale / 100);
+        decimal totaleDopoSconto = subtotale - scontoImporto;
+        iva = totaleDopoSconto * 0.22m;
+        totale = totaleDopoSconto + iva;
+        ultimoAggiornamentoCalcolo = DateTime.Now;
+    }
+    
+    protected override void OnInitialized()
+    {
+        CalcolaTotale();
+    }
+}
