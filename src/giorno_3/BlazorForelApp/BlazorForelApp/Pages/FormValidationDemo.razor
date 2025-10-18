@@ -1,0 +1,1114 @@
+@page "/form-validation-demo"
+@using System.ComponentModel.DataAnnotations
+
+<PageTitle>Demo Validazione Form</PageTitle>
+
+<link href="css/form-validation-demo.css" rel="stylesheet" />
+
+<h1>Demo Validazione Form con EditForm e DataAnnotations</h1>
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="alert alert-info">
+                <h4>?? Obiettivi Didattici</h4>
+                <p>Questa pagina dimostra come validare i form in Blazor usando:</p>
+                <ul>
+                    <li><strong>EditForm</strong> - Componente per gestire form con validazione</li>
+                    <li><strong>DataAnnotations</strong> - Attributi per definire regole di validazione</li>
+                    <li><strong>ValidationSummary</strong> - Riepilogo errori di validazione</li>
+                    <li><strong>ValidationMessage</strong> - Messaggi di errore per campo</li>
+                    <li><strong>Validazione Custom</strong> - Creare validatori personalizzati</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sezione 1: EditForm Base -->
+    <div class="row mb-5">
+        <div class="col-md-12">
+            <div class="demo-section">
+                <h3>1?? EditForm Base con DataAnnotations</h3>
+                <p class="explanation">
+                    <code>EditForm</code> gestisce automaticamente la validazione quando si usa un modello con DataAnnotations.
+                </p>
+
+                <div class="demo-box">
+                    <EditForm Model="@basicModel" OnValidSubmit="@HandleBasicFormSubmit" FormName="BasicForm">
+                        <DataAnnotationsValidator />
+                        
+                        <div class="validation-summary-container">
+                            <ValidationSummary />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="basic-nome">Nome:</label>
+                            <InputText id="basic-nome" class="form-control" @bind-Value="basicModel.Nome" />
+                            <ValidationMessage For="@(() => basicModel.Nome)" />
+                            <small class="form-text text-muted">Campo obbligatorio, minimo 2 caratteri</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="basic-email">Email:</label>
+                            <InputText id="basic-email" type="email" class="form-control" @bind-Value="basicModel.Email" />
+                            <ValidationMessage For="@(() => basicModel.Email)" />
+                            <small class="form-text text-muted">Formato email valido richiesto</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="basic-eta">Età:</label>
+                            <InputNumber id="basic-eta" class="form-control" @bind-Value="basicModel.Eta" />
+                            <ValidationMessage For="@(() => basicModel.Eta)" />
+                            <small class="form-text text-muted">Età tra 18 e 120</small>
+                        </div>
+
+                        <div class="button-group">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-circle"></i> Invia
+                            </button>
+                            <button type="button" class="btn btn-secondary" @onclick="ResetBasicForm">
+                                <i class="bi bi-arrow-counterclockwise"></i> Reset
+                            </button>
+                        </div>
+                    </EditForm>
+
+                    @if (!string.IsNullOrEmpty(basicFormResult))
+                    {
+                        <div class="result-box success">
+                            <strong>? Form inviato con successo!</strong>
+                            <pre>@basicFormResult</pre>
+                        </div>
+                    }
+                </div>
+
+                <div class="code-explanation">
+                    <strong>?? Componenti chiave:</strong>
+                    <pre><code>&lt;EditForm Model="@@model" OnValidSubmit="@@HandleSubmit"&gt;
+    &lt;DataAnnotationsValidator /&gt;
+    &lt;ValidationSummary /&gt;
+    
+    &lt;InputText @@bind-Value="model.Nome" /&gt;
+    &lt;ValidationMessage For="@@(() =&gt; model.Nome)" /&gt;
+    
+    &lt;button type="submit"&gt;Invia&lt;/button&gt;
+&lt;/EditForm&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sezione 2: DataAnnotations Comuni -->
+    <div class="row mb-5">
+        <div class="col-md-12">
+            <div class="demo-section">
+                <h3>2?? DataAnnotations Comuni</h3>
+                <p class="explanation">
+                    Gli attributi più utilizzati per la validazione dei dati.
+                </p>
+
+                <div class="demo-box">
+                    <EditForm Model="@annotationsModel" OnValidSubmit="@HandleAnnotationsSubmit" FormName="AnnotationsForm">
+                        <DataAnnotationsValidator />
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="annotation-example">
+                                    <h5>[Required]</h5>
+                                    <div class="form-group">
+                                        <label>Campo obbligatorio:</label>
+                                        <InputText class="form-control" @bind-Value="annotationsModel.CampoObbligatorio" />
+                                        <ValidationMessage For="@(() => annotationsModel.CampoObbligatorio)" />
+                                    </div>
+                                </div>
+
+                                <div class="annotation-example">
+                                    <h5>[StringLength]</h5>
+                                    <div class="form-group">
+                                        <label>Username (3-20 caratteri):</label>
+                                        <InputText class="form-control" @bind-Value="annotationsModel.Username" />
+                                        <ValidationMessage For="@(() => annotationsModel.Username)" />
+                                        <small>Lunghezza: @(annotationsModel.Username?.Length ?? 0)/20</small>
+                                    </div>
+                                </div>
+
+                                <div class="annotation-example">
+                                    <h5>[Range]</h5>
+                                    <div class="form-group">
+                                        <label>Voto (0-100):</label>
+                                        <InputNumber class="form-control" @bind-Value="annotationsModel.Voto" />
+                                        <ValidationMessage For="@(() => annotationsModel.Voto)" />
+                                    </div>
+                                </div>
+
+                                <div class="annotation-example">
+                                    <h5>[EmailAddress]</h5>
+                                    <div class="form-group">
+                                        <label>Email aziendale:</label>
+                                        <InputText type="email" class="form-control" @bind-Value="annotationsModel.EmailAziendale" />
+                                        <ValidationMessage For="@(() => annotationsModel.EmailAziendale)" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="annotation-example">
+                                    <h5>[Phone]</h5>
+                                    <div class="form-group">
+                                        <label>Telefono:</label>
+                                        <InputText class="form-control" @bind-Value="annotationsModel.Telefono" />
+                                        <ValidationMessage For="@(() => annotationsModel.Telefono)" />
+                                    </div>
+                                </div>
+
+                                <div class="annotation-example">
+                                    <h5>[Url]</h5>
+                                    <div class="form-group">
+                                        <label>Sito web:</label>
+                                        <InputText class="form-control" @bind-Value="annotationsModel.SitoWeb" />
+                                        <ValidationMessage For="@(() => annotationsModel.SitoWeb)" />
+                                    </div>
+                                </div>
+
+                                <div class="annotation-example">
+                                    <h5>[RegularExpression]</h5>
+                                    <div class="form-group">
+                                        <label>Codice prodotto (AAA-9999):</label>
+                                        <InputText class="form-control" @bind-Value="annotationsModel.CodiceProdotto" />
+                                        <ValidationMessage For="@(() => annotationsModel.CodiceProdotto)" />
+                                    </div>
+                                </div>
+
+                                <div class="annotation-example">
+                                    <h5>[Compare]</h5>
+                                    <div class="form-group">
+                                        <label>Password:</label>
+                                        <InputText type="password" class="form-control" @bind-Value="annotationsModel.Password" />
+                                        <ValidationMessage For="@(() => annotationsModel.Password)" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Conferma Password:</label>
+                                        <InputText type="password" class="form-control" @bind-Value="annotationsModel.ConfermaPassword" />
+                                        <ValidationMessage For="@(() => annotationsModel.ConfermaPassword)" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="button-group">
+                            <button type="submit" class="btn btn-primary">Valida Tutto</button>
+                            <button type="button" class="btn btn-secondary" @onclick="ResetAnnotationsForm">Reset</button>
+                        </div>
+                    </EditForm>
+
+                    @if (!string.IsNullOrEmpty(annotationsFormResult))
+                    {
+                        <div class="result-box success">
+                            <strong>? Tutti i campi sono validi!</strong>
+                        </div>
+                    }
+                </div>
+
+                <div class="code-explanation">
+                    <strong>?? Esempio di Model con DataAnnotations:</strong>
+                    <pre><code>public class RegistrationModel
+{
+    [Required(ErrorMessage = "Il nome è obbligatorio")]
+    [StringLength(50, MinimumLength = 2)]
+    public string Nome { get; set; }
+
+    [EmailAddress(ErrorMessage = "Email non valida")]
+    public string Email { get; set; }
+
+    [Range(18, 120, ErrorMessage = "L'età deve essere tra 18 e 120")]
+    public int Eta { get; set; }
+
+    [Phone]
+    public string Telefono { get; set; }
+
+    [Url]
+    public string SitoWeb { get; set; }
+
+    [RegularExpression(@@"^[A-Z]{3}-\d{4}$")]
+    public string CodiceProdotto { get; set; }
+
+    [Compare(nameof(Password))]
+    public string ConfermaPassword { get; set; }
+}</code></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sezione 3: Validazione Custom -->
+    <div class="row mb-5">
+        <div class="col-md-12">
+            <div class="demo-section">
+                <h3>3?? Validazione Personalizzata</h3>
+                <p class="explanation">
+                    Crea validatori custom per regole di business specifiche.
+                </p>
+
+                <div class="demo-box">
+                    <EditForm Model="@customModel" OnValidSubmit="@HandleCustomSubmit" FormName="CustomForm">
+                        <DataAnnotationsValidator />
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Codice Fiscale Italiano:</label>
+                                    <InputText class="form-control" @bind-Value="customModel.CodiceFiscale" />
+                                    <ValidationMessage For="@(() => customModel.CodiceFiscale)" />
+                                    <small class="form-text text-muted">16 caratteri alfanumerici</small>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Partita IVA:</label>
+                                    <InputText class="form-control" @bind-Value="customModel.PartitaIva" />
+                                    <ValidationMessage For="@(() => customModel.PartitaIva)" />
+                                    <small class="form-text text-muted">11 cifre numeriche</small>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Data Nascita:</label>
+                                    <InputDate class="form-control" @bind-Value="customModel.DataNascita" />
+                                    <ValidationMessage For="@(() => customModel.DataNascita)" />
+                                    <small class="form-text text-muted">Devi avere almeno 18 anni</small>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>IBAN:</label>
+                                    <InputText class="form-control" @bind-Value="customModel.Iban" />
+                                    <ValidationMessage For="@(() => customModel.Iban)" />
+                                    <small class="form-text text-muted">IBAN italiano (IT + 25 caratteri)</small>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Password Forte:</label>
+                                    <InputText type="password" class="form-control" @bind-Value="customModel.PasswordForte" />
+                                    <ValidationMessage For="@(() => customModel.PasswordForte)" />
+                                    <small class="form-text text-muted">Min 8 caratteri, maiuscola, minuscola, numero, simbolo</small>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Accetto termini e condizioni:</label>
+                                    <div class="form-check">
+                                        <InputCheckbox id="terms" class="form-check-input" @bind-Value="customModel.AccettaTermini" />
+                                        <label class="form-check-label" for="terms">
+                                            Ho letto e accetto i termini
+                                        </label>
+                                    </div>
+                                    <ValidationMessage For="@(() => customModel.AccettaTermini)" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="button-group">
+                            <button type="submit" class="btn btn-primary">Valida Form Custom</button>
+                            <button type="button" class="btn btn-secondary" @onclick="ResetCustomForm">Reset</button>
+                        </div>
+                    </EditForm>
+
+                    @if (!string.IsNullOrEmpty(customFormResult))
+                    {
+                        <div class="result-box success">
+                            <strong>? Validazione custom superata!</strong>
+                            <pre>@customFormResult</pre>
+                        </div>
+                    }
+                </div>
+
+                <div class="code-explanation">
+                    <strong>?? Esempio di ValidationAttribute Custom:</strong>
+                    <pre><code>public class CodiceFiscaleAttribute : ValidationAttribute
+{
+    protected override ValidationResult IsValid(
+        object value, ValidationContext validationContext)
+    {
+        var codiceFiscale = value as string;
+        
+        if (string.IsNullOrEmpty(codiceFiscale))
+            return ValidationResult.Success;
+            
+        if (codiceFiscale.Length != 16)
+            return new ValidationResult(
+                "Il codice fiscale deve essere di 16 caratteri");
+        
+        if (!Regex.IsMatch(codiceFiscale, "^[A-Z0-9]{16}$"))
+            return new ValidationResult(
+                "Il codice fiscale contiene caratteri non validi");
+        
+        return ValidationResult.Success;
+    }
+}</code></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sezione 4: Form Complesso con Nested Objects -->
+    <div class="row mb-5">
+        <div class="col-md-12">
+            <div class="demo-section">
+                <h3>4?? Form Complesso con Oggetti Annidati</h3>
+                <p class="explanation">
+                    Validazione di modelli complessi con oggetti nested e collezioni.
+                </p>
+
+                <div class="demo-box">
+                    <EditForm Model="@registrationModel" OnValidSubmit="@HandleRegistrationSubmit" FormName="RegistrationForm">
+                        <DataAnnotationsValidator />
+
+                        <div class="form-section">
+                            <h5>?? Dati Personali</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Nome:</label>
+                                        <InputText class="form-control" @bind-Value="registrationModel.Nome" />
+                                        <ValidationMessage For="@(() => registrationModel.Nome)" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Cognome:</label>
+                                        <InputText class="form-control" @bind-Value="registrationModel.Cognome" />
+                                        <ValidationMessage For="@(() => registrationModel.Cognome)" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Email:</label>
+                                        <InputText type="email" class="form-control" @bind-Value="registrationModel.Email" />
+                                        <ValidationMessage For="@(() => registrationModel.Email)" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Telefono:</label>
+                                        <InputText class="form-control" @bind-Value="registrationModel.Telefono" />
+                                        <ValidationMessage For="@(() => registrationModel.Telefono)" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h5>?? Indirizzo</h5>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="form-group">
+                                        <label>Via:</label>
+                                        <InputText class="form-control" @bind-Value="registrationModel.Indirizzo.Via" />
+                                        <ValidationMessage For="@(() => registrationModel.Indirizzo.Via)" />
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Civico:</label>
+                                        <InputText class="form-control" @bind-Value="registrationModel.Indirizzo.Civico" />
+                                        <ValidationMessage For="@(() => registrationModel.Indirizzo.Civico)" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>CAP:</label>
+                                        <InputText class="form-control" @bind-Value="registrationModel.Indirizzo.Cap" />
+                                        <ValidationMessage For="@(() => registrationModel.Indirizzo.Cap)" />
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Città:</label>
+                                        <InputText class="form-control" @bind-Value="registrationModel.Indirizzo.Citta" />
+                                        <ValidationMessage For="@(() => registrationModel.Indirizzo.Citta)" />
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Provincia:</label>
+                                        <InputText class="form-control" @bind-Value="registrationModel.Indirizzo.Provincia" />
+                                        <ValidationMessage For="@(() => registrationModel.Indirizzo.Provincia)" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h5>?? Preferenze</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Categoria:</label>
+                                        <InputSelect class="form-control" @bind-Value="registrationModel.Categoria">
+                                            <option value="">Seleziona...</option>
+                                            <option value="studente">Studente</option>
+                                            <option value="lavoratore">Lavoratore</option>
+                                            <option value="professionista">Professionista</option>
+                                            <option value="azienda">Azienda</option>
+                                        </InputSelect>
+                                        <ValidationMessage For="@(() => registrationModel.Categoria)" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Newsletter:</label>
+                                        <div class="form-check">
+                                            <InputCheckbox id="newsletter" class="form-check-input" @bind-Value="registrationModel.AccettaNewsletter" />
+                                            <label class="form-check-label" for="newsletter">
+                                                Voglio ricevere la newsletter
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Note (opzionale):</label>
+                                <InputTextArea class="form-control" rows="3" @bind-Value="registrationModel.Note" />
+                                <ValidationMessage For="@(() => registrationModel.Note)" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="form-check">
+                                <InputCheckbox id="privacy" class="form-check-input" @bind-Value="registrationModel.AccettaPrivacy" />
+                                <label class="form-check-label" for="privacy">
+                                    <strong>Accetto l'informativa sulla privacy *</strong>
+                                </label>
+                            </div>
+                            <ValidationMessage For="@(() => registrationModel.AccettaPrivacy)" />
+                        </div>
+
+                        <div class="button-group">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="bi bi-person-check"></i> Registrati
+                            </button>
+                            <button type="button" class="btn btn-secondary" @onclick="ResetRegistrationForm">
+                                <i class="bi bi-arrow-counterclockwise"></i> Reset
+                            </button>
+                        </div>
+                    </EditForm>
+
+                    @if (!string.IsNullOrEmpty(registrationFormResult))
+                    {
+                        <div class="result-box success">
+                            <strong>? Registrazione completata con successo!</strong>
+                            <pre>@registrationFormResult</pre>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sezione 5: Eventi e Controllo Manuale -->
+    <div class="row mb-5">
+        <div class="col-md-12">
+            <div class="demo-section">
+                <h3>5?? Eventi EditForm e Controllo Manuale</h3>
+                <p class="explanation">
+                    Gestione avanzata: OnSubmit, OnValidSubmit, OnInvalidSubmit e validazione manuale.
+                </p>
+
+                <div class="demo-box">
+                    <EditForm EditContext="@editContext" OnSubmit="@HandleManualSubmit" FormName="ManualForm">
+                        <DataAnnotationsValidator />
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Username:</label>
+                                    <InputText class="form-control" @bind-Value="manualModel.Username" />
+                                    <ValidationMessage For="@(() => manualModel.Username)" />
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Email:</label>
+                                    <InputText type="email" class="form-control" @bind-Value="manualModel.Email" />
+                                    <ValidationMessage For="@(() => manualModel.Email)" />
+                                </div>
+
+                                <div class="button-group">
+                                    <button type="submit" class="btn btn-primary">Submit (OnSubmit)</button>
+                                    <button type="button" class="btn btn-info" @onclick="ValidateManually">
+                                        Valida Manualmente
+                                    </button>
+                                    <button type="button" class="btn btn-warning" @onclick="AddCustomError">
+                                        Aggiungi Errore Custom
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="info-panel">
+                                    <h6>?? Stato EditContext:</h6>
+                                    <ul class="list-unstyled">
+                                        <li>
+                                            <strong>IsModified:</strong>
+                                            <span class="badge @(editContext?.IsModified() == true ? "bg-warning" : "bg-secondary")">
+                                                @(editContext?.IsModified() == true ? "Modificato" : "Non modificato")
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <strong>Validation Messages:</strong>
+                                            <span class="badge bg-info">@(editContext?.GetValidationMessages()?.Count() ?? 0)</span>
+                                        </li>
+                                    </ul>
+
+                                    @if (editContext != null && editContext.GetValidationMessages().Any())
+                                    {
+                                        <div class="alert alert-danger">
+                                            <strong>Errori:</strong>
+                                            <ul>
+                                                @foreach (var message in editContext.GetValidationMessages())
+                                                {
+                                                    <li>@message</li>
+                                                }
+                                            </ul>
+                                        </div>
+                                    }
+
+                                    @if (!string.IsNullOrEmpty(manualValidationLog))
+                                    {
+                                        <div class="log-box">
+                                            <strong>Log eventi:</strong>
+                                            <pre>@manualValidationLog</pre>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </EditForm>
+                </div>
+
+                <div class="code-explanation">
+                    <strong>?? Eventi e controllo manuale:</strong>
+                    <pre><code>private EditContext editContext;
+
+protected override void OnInitialized()
+{
+    editContext = new EditContext(model);
+    editContext.OnFieldChanged += HandleFieldChanged;
+    editContext.OnValidationStateChanged += HandleValidationStateChanged;
+}
+
+private void HandleManualSubmit()
+{
+    var isValid = editContext.Validate();
+    if (isValid)
+    {
+        // Form valido
+    }
+    else
+    {
+        // Form non valido
+    }
+}
+
+private void AddCustomError()
+{
+    editContext.GetValidationMessages().Add(
+        editContext.Field(nameof(model.Email)),
+        "Errore personalizzato"
+    );
+}</code></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sezione 6: Best Practices -->
+    <div class="row mb-5">
+        <div class="col-md-12">
+            <div class="demo-section best-practices">
+                <h3>?? Best Practices per la Validazione Form</h3>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="tip-card">
+                            <div class="tip-icon">?</div>
+                            <div class="tip-content">
+                                <h5>DO - Cosa Fare</h5>
+                                <ul>
+                                    <li>Usa <code>DataAnnotationsValidator</code> per validazione automatica</li>
+                                    <li>Mostra <code>ValidationMessage</code> vicino ad ogni campo</li>
+                                    <li>Usa <code>OnValidSubmit</code> per gestire solo form validi</li>
+                                    <li>Fornisci messaggi di errore chiari e specifici</li>
+                                    <li>Valida sia client-side che server-side</li>
+                                    <li>Usa attributi custom per logica di business complessa</li>
+                                    <li>Disabilita il pulsante submit durante l'invio</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="tip-card danger">
+                            <div class="tip-icon">?</div>
+                            <div class="tip-content">
+                                <h5>DON'T - Cosa Evitare</h5>
+                                <ul>
+                                    <li>Non fare validazione solo client-side (sicurezza)</li>
+                                    <li>Non mostrare troppi errori contemporaneamente</li>
+                                    <li>Non usare messaggi di errore generici</li>
+                                    <li>Non dimenticare di validare oggetti nested</li>
+                                    <li>Non fare validazioni complesse in getters/setters</li>
+                                    <li>Non ignorare <code>ValidationSummary</code> per panoramica errori</li>
+                                    <li>Non permettere submit multipli senza controllo</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="summary-table mt-4">
+                    <h5>Tabella DataAnnotations</h5>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Attributo</th>
+                                <th>Descrizione</th>
+                                <th>Esempio</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>[Required]</code></td>
+                                <td>Campo obbligatorio</td>
+                                <td><code>[Required(ErrorMessage = "Campo obbligatorio")]</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>[StringLength]</code></td>
+                                <td>Lunghezza stringa</td>
+                                <td><code>[StringLength(50, MinimumLength = 3)]</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>[Range]</code></td>
+                                <td>Valore in un range</td>
+                                <td><code>[Range(1, 100)]</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>[EmailAddress]</code></td>
+                                <td>Formato email</td>
+                                <td><code>[EmailAddress]</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>[Phone]</code></td>
+                                <td>Formato telefono</td>
+                                <td><code>[Phone]</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>[Url]</code></td>
+                                <td>Formato URL</td>
+                                <td><code>[Url]</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>[RegularExpression]</code></td>
+                                <td>Pattern regex</td>
+                                <td><code>[RegularExpression("^[A-Z]{3}$")]</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>[Compare]</code></td>
+                                <td>Confronto tra campi</td>
+                                <td><code>[Compare(nameof(Password))]</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>[CreditCard]</code></td>
+                                <td>Numero carta di credito</td>
+                                <td><code>[CreditCard]</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    // Sezione 1: Basic Form
+    private BasicFormModel basicModel = new();
+    private string basicFormResult = "";
+
+    // Sezione 2: Annotations
+    private AnnotationsFormModel annotationsModel = new();
+    private string annotationsFormResult = "";
+
+    // Sezione 3: Custom Validation
+    private CustomFormModel customModel = new();
+    private string customFormResult = "";
+
+    // Sezione 4: Registration Form
+    private RegistrationFormModel registrationModel = new();
+    private string registrationFormResult = "";
+
+    // Sezione 5: Manual Control
+    private ManualFormModel manualModel = new();
+    private EditContext? editContext;
+    private string manualValidationLog = "";
+
+    protected override void OnInitialized()
+    {
+        editContext = new EditContext(manualModel);
+        editContext.OnFieldChanged += HandleFieldChanged;
+        editContext.OnValidationStateChanged += HandleValidationStateChanged;
+    }
+
+    // Basic Form
+    private void HandleBasicFormSubmit()
+    {
+        basicFormResult = $"Nome: {basicModel.Nome}\n" +
+                         $"Email: {basicModel.Email}\n" +
+                         $"Età: {basicModel.Eta}";
+    }
+
+    private void ResetBasicForm()
+    {
+        basicModel = new BasicFormModel();
+        basicFormResult = "";
+    }
+
+    // Annotations Form
+    private void HandleAnnotationsSubmit()
+    {
+        annotationsFormResult = "Validazione completata!";
+        Task.Delay(3000).ContinueWith(_ => InvokeAsync(() =>
+        {
+            annotationsFormResult = "";
+            StateHasChanged();
+        }));
+    }
+
+    private void ResetAnnotationsForm()
+    {
+        annotationsModel = new AnnotationsFormModel();
+        annotationsFormResult = "";
+    }
+
+    // Custom Form
+    private void HandleCustomSubmit()
+    {
+        customFormResult = $"Codice Fiscale: {customModel.CodiceFiscale}\n" +
+                          $"Partita IVA: {customModel.PartitaIva}\n" +
+                          $"Data Nascita: {customModel.DataNascita:dd/MM/yyyy}\n" +
+                          $"IBAN: {customModel.Iban}";
+    }
+
+    private void ResetCustomForm()
+    {
+        customModel = new CustomFormModel();
+        customFormResult = "";
+    }
+
+    // Registration Form
+    private void HandleRegistrationSubmit()
+    {
+        registrationFormResult = $"Registrazione: {registrationModel.Nome} {registrationModel.Cognome}\n" +
+                                $"Email: {registrationModel.Email}\n" +
+                                $"Indirizzo: {registrationModel.Indirizzo.Via} {registrationModel.Indirizzo.Civico}, " +
+                                $"{registrationModel.Indirizzo.Cap} {registrationModel.Indirizzo.Citta} ({registrationModel.Indirizzo.Provincia})\n" +
+                                $"Categoria: {registrationModel.Categoria}";
+    }
+
+    private void ResetRegistrationForm()
+    {
+        registrationModel = new RegistrationFormModel();
+        registrationFormResult = "";
+    }
+
+    // Manual Form
+    private void HandleManualSubmit()
+    {
+        manualValidationLog += $"[{DateTime.Now:HH:mm:ss}] OnSubmit chiamato\n";
+        
+        if (editContext != null)
+        {
+            var isValid = editContext.Validate();
+            manualValidationLog += $"[{DateTime.Now:HH:mm:ss}] Validazione: {(isValid ? "VALIDO" : "NON VALIDO")}\n";
+            
+            if (isValid)
+            {
+                manualValidationLog += $"[{DateTime.Now:HH:mm:ss}] Form inviato con successo!\n";
+            }
+        }
+        
+        StateHasChanged();
+    }
+
+    private void ValidateManually()
+    {
+        if (editContext != null)
+        {
+            var isValid = editContext.Validate();
+            manualValidationLog += $"[{DateTime.Now:HH:mm:ss}] Validazione manuale: {(isValid ? "VALIDO" : "NON VALIDO")}\n";
+            StateHasChanged();
+        }
+    }
+
+    private void AddCustomError()
+    {
+        if (editContext != null)
+        {
+            var messages = new ValidationMessageStore(editContext);
+            messages.Add(editContext.Field(nameof(manualModel.Email)), "Questo è un errore personalizzato!");
+            editContext.NotifyValidationStateChanged();
+            manualValidationLog += $"[{DateTime.Now:HH:mm:ss}] Errore custom aggiunto\n";
+            StateHasChanged();
+        }
+    }
+
+    private void HandleFieldChanged(object? sender, FieldChangedEventArgs e)
+    {
+        manualValidationLog += $"[{DateTime.Now:HH:mm:ss}] Campo modificato: {e.FieldIdentifier.FieldName}\n";
+        StateHasChanged();
+    }
+
+    private void HandleValidationStateChanged(object? sender, ValidationStateChangedEventArgs e)
+    {
+        manualValidationLog += $"[{DateTime.Now:HH:mm:ss}] Stato validazione cambiato\n";
+        StateHasChanged();
+    }
+
+    // Models
+    public class BasicFormModel
+    {
+        [Required(ErrorMessage = "Il nome è obbligatorio")]
+        [StringLength(50, MinimumLength = 2, ErrorMessage = "Il nome deve essere tra 2 e 50 caratteri")]
+        public string Nome { get; set; } = "";
+
+        [Required(ErrorMessage = "L'email è obbligatoria")]
+        [EmailAddress(ErrorMessage = "Formato email non valido")]
+        public string Email { get; set; } = "";
+
+        [Range(18, 120, ErrorMessage = "L'età deve essere tra 18 e 120 anni")]
+        public int Eta { get; set; }
+    }
+
+    public class AnnotationsFormModel
+    {
+        [Required(ErrorMessage = "Campo obbligatorio")]
+        public string CampoObbligatorio { get; set; } = "";
+
+        [StringLength(20, MinimumLength = 3, ErrorMessage = "Username deve essere tra 3 e 20 caratteri")]
+        public string Username { get; set; } = "";
+
+        [Range(0, 100, ErrorMessage = "Il voto deve essere tra 0 e 100")]
+        public int Voto { get; set; }
+
+        [EmailAddress(ErrorMessage = "Email non valida")]
+        public string EmailAziendale { get; set; } = "";
+
+        [Phone(ErrorMessage = "Numero di telefono non valido")]
+        public string Telefono { get; set; } = "";
+
+        [Url(ErrorMessage = "URL non valido")]
+        public string SitoWeb { get; set; } = "";
+
+        [RegularExpression(@"^[A-Z]{3}-\d{4}$", ErrorMessage = "Formato richiesto: AAA-9999")]
+        public string CodiceProdotto { get; set; } = "";
+
+        [Required]
+        [StringLength(100, MinimumLength = 6)]
+        public string Password { get; set; } = "";
+
+        [Compare(nameof(Password), ErrorMessage = "Le password non coincidono")]
+        public string ConfermaPassword { get; set; } = "";
+    }
+
+    public class CustomFormModel
+    {
+        [Required]
+        [CodiceFiscale]
+        public string CodiceFiscale { get; set; } = "";
+
+        [Required]
+        [PartitaIva]
+        public string PartitaIva { get; set; } = "";
+
+        [Required]
+        [MaggioreDiEta(18)]
+        public DateTime DataNascita { get; set; } = DateTime.Today.AddYears(-20);
+
+        [Iban]
+        public string Iban { get; set; } = "";
+
+        [PasswordForte]
+        public string PasswordForte { get; set; } = "";
+
+        [Range(typeof(bool), "true", "true", ErrorMessage = "Devi accettare i termini e condizioni")]
+        public bool AccettaTermini { get; set; }
+    }
+
+    public class RegistrationFormModel
+    {
+        [Required(ErrorMessage = "Il nome è obbligatorio")]
+        [StringLength(50, MinimumLength = 2)]
+        public string Nome { get; set; } = "";
+
+        [Required(ErrorMessage = "Il cognome è obbligatorio")]
+        [StringLength(50, MinimumLength = 2)]
+        public string Cognome { get; set; } = "";
+
+        [Required(ErrorMessage = "L'email è obbligatoria")]
+        [EmailAddress(ErrorMessage = "Email non valida")]
+        public string Email { get; set; } = "";
+
+        [Phone(ErrorMessage = "Telefono non valido")]
+        public string Telefono { get; set; } = "";
+
+        [Required]
+        public IndirizzoModel Indirizzo { get; set; } = new();
+
+        [Required(ErrorMessage = "Seleziona una categoria")]
+        public string Categoria { get; set; } = "";
+
+        public bool AccettaNewsletter { get; set; }
+
+        [StringLength(500)]
+        public string Note { get; set; } = "";
+
+        [Range(typeof(bool), "true", "true", ErrorMessage = "Devi accettare l'informativa sulla privacy")]
+        public bool AccettaPrivacy { get; set; }
+    }
+
+    public class IndirizzoModel
+    {
+        [Required(ErrorMessage = "La via è obbligatoria")]
+        public string Via { get; set; } = "";
+
+        [Required(ErrorMessage = "Il civico è obbligatorio")]
+        public string Civico { get; set; } = "";
+
+        [Required(ErrorMessage = "Il CAP è obbligatorio")]
+        [RegularExpression(@"^\d{5}$", ErrorMessage = "CAP deve essere di 5 cifre")]
+        public string Cap { get; set; } = "";
+
+        [Required(ErrorMessage = "La città è obbligatoria")]
+        public string Citta { get; set; } = "";
+
+        [Required(ErrorMessage = "La provincia è obbligatoria")]
+        [StringLength(2, MinimumLength = 2, ErrorMessage = "La provincia deve essere di 2 lettere")]
+        public string Provincia { get; set; } = "";
+    }
+
+    public class ManualFormModel
+    {
+        [Required]
+        [StringLength(20, MinimumLength = 3)]
+        public string Username { get; set; } = "";
+
+        [Required]
+        [EmailAddress]
+        public string Email { get; set; } = "";
+    }
+
+    // Custom Validation Attributes
+    public class CodiceFiscaleAttribute : ValidationAttribute
+    {
+        protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
+        {
+            if (value == null || string.IsNullOrWhiteSpace(value.ToString()))
+                return ValidationResult.Success;
+
+            var cf = value.ToString()!.ToUpper();
+            
+            if (cf.Length != 16)
+                return new ValidationResult("Il codice fiscale deve essere di 16 caratteri");
+
+            if (!System.Text.RegularExpressions.Regex.IsMatch(cf, @"^[A-Z0-9]{16}$"))
+                return new ValidationResult("Il codice fiscale contiene caratteri non validi");
+
+            return ValidationResult.Success;
+        }
+    }
+
+    public class PartitaIvaAttribute : ValidationAttribute
+    {
+        protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
+        {
+            if (value == null || string.IsNullOrWhiteSpace(value.ToString()))
+                return ValidationResult.Success;
+
+            var piva = value.ToString()!;
+            
+            if (!System.Text.RegularExpressions.Regex.IsMatch(piva, @"^\d{11}$"))
+                return new ValidationResult("La Partita IVA deve essere composta da 11 cifre");
+
+            return ValidationResult.Success;
+        }
+    }
+
+    public class MaggioreDiEtaAttribute : ValidationAttribute
+    {
+        private readonly int _etaMinima;
+
+        public MaggioreDiEtaAttribute(int etaMinima)
+        {
+            _etaMinima = etaMinima;
+        }
+
+        protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
+        {
+            if (value is DateTime dataNascita)
+            {
+                var eta = DateTime.Today.Year - dataNascita.Year;
+                if (dataNascita.Date > DateTime.Today.AddYears(-eta)) eta--;
+
+                if (eta < _etaMinima)
+                    return new ValidationResult($"Devi avere almeno {_etaMinima} anni");
+            }
+
+            return ValidationResult.Success;
+        }
+    }
+
+    public class IbanAttribute : ValidationAttribute
+    {
+        protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
+        {
+            if (value == null || string.IsNullOrWhiteSpace(value.ToString()))
+                return ValidationResult.Success;
+
+            var iban = value.ToString()!.Replace(" ", "").ToUpper();
+            
+            if (!iban.StartsWith("IT") || iban.Length != 27)
+                return new ValidationResult("IBAN italiano non valido (deve iniziare con IT e avere 27 caratteri)");
+
+            return ValidationResult.Success;
+        }
+    }
+
+    public class PasswordForteAttribute : ValidationAttribute
+    {
+        protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
+        {
+            if (value == null || string.IsNullOrWhiteSpace(value.ToString()))
+                return ValidationResult.Success;
+
+            var password = value.ToString()!;
+            
+            if (password.Length < 8)
+                return new ValidationResult("La password deve contenere almeno 8 caratteri");
+
+            if (!password.Any(char.IsUpper))
+                return new ValidationResult("La password deve contenere almeno una lettera maiuscola");
+
+            if (!password.Any(char.IsLower))
+                return new ValidationResult("La password deve contenere almeno una lettera minuscola");
+
+            if (!password.Any(char.IsDigit))
+                return new ValidationResult("La password deve contenere almeno un numero");
+
+            if (!password.Any(c => !char.IsLetterOrDigit(c)))
+                return new ValidationResult("La password deve contenere almeno un simbolo");
+
+            return ValidationResult.Success;
+        }
+    }
+}
