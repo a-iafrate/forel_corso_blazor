@@ -10,7 +10,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="alert alert-info">
-                <h4>📚 Obiettivi Didattici</h4>
+                <h4>Obiettivi Didattici</h4>
                 <p>Questa pagina dimostra come utilizzare la direttiva <code>@@bind</code> in Blazor con:</p>
                 <ul>
                     <li>Formattazione di date, numeri e valute</li>
@@ -26,7 +26,7 @@
     <div class="row mb-5">
         <div class="col-md-12">
             <div class="demo-section">
-                <h3>1️ Binding Base (Two-Way Data Binding)</h3>
+                <h3>1. Binding Base (Two-Way Data Binding)</h3>
                 <p class="explanation">
                     Il binding base sincronizza automaticamente il valore tra l'input e la variabile C#.
                 </p>
@@ -44,7 +44,7 @@
                 </div>
 
                 <div class="code-explanation">
-                    <strong>💡 Spiegazione:</strong>
+                    <strong>Spiegazione:</strong>
                     <pre><code>&lt;input type="text" @@bind="nome" /&gt;</code></pre>
                     <p>Il binding avviene <strong>on change</strong> (quando l'input perde il focus).</p>
                 </div>
@@ -56,7 +56,7 @@
     <div class="row mb-5">
         <div class="col-md-12">
             <div class="demo-section">
-                <h3>2️ Binding con Eventi Personalizzati</h3>
+                <h3>2. Binding con Eventi Personalizzati</h3>
                 <p class="explanation">
                     Puoi specificare quando il binding deve avvenire usando <code>@@bind:event</code>.
                 </p>
@@ -90,7 +90,7 @@
                 </div>
 
                 <div class="code-explanation">
-                    <strong>💡 Spiegazione:</strong>
+                    <strong>Spiegazione:</strong>
                     <pre><code>&lt;input @@bind="testo" @@bind:event="oninput" /&gt;</code></pre>
                     <p>Con <code>@@bind:event="oninput"</code> il binding avviene ad ogni keystroke.</p>
                 </div>
@@ -102,7 +102,7 @@
     <div class="row mb-5">
         <div class="col-md-12">
             <div class="demo-section">
-                <h3>3️ Formattazione delle Date</h3>
+                <h3>3. Formattazione delle Date</h3>
                 <p class="explanation">
                     Usa <code>@@bind:format</code> per specificare come formattare le date.
                 </p>
@@ -166,7 +166,7 @@
                 </div>
 
                 <div class="code-explanation">
-                    <strong>💡 Formati comuni per le date:</strong>
+                    <strong>Formati comuni per le date:</strong>
                     <ul>
                         <li><code>yyyy-MM-dd</code> - Per input type="date"</li>
                         <li><code>yyyy-MM-ddTHH:mm</code> - Per input type="datetime-local"</li>
@@ -181,7 +181,7 @@
     <div class="row mb-5">
         <div class="col-md-12">
             <div class="demo-section">
-                <h3>4️⃣ Formattazione dei Numeri</h3>
+                <h3>4. Formattazione dei Numeri</h3>
                 <p class="explanation">
                     I numeri possono essere formattati usando culture e formati specifici.
                 </p>
@@ -257,7 +257,7 @@
                 </div>
 
                 <div class="code-explanation">
-                    <strong>💡 Formati numerici comuni:</strong>
+                    <strong>Formati numerici comuni:</strong>
                     <ul>
                         <li><code>N0</code> - Numero con separatore migliaia, 0 decimali</li>
                         <li><code>N2</code> - Numero con 2 decimali</li>
@@ -273,7 +273,7 @@
     <div class="row mb-5">
         <div class="col-md-12">
             <div class="demo-section">
-                <h3>5️⃣ Conversione Personalizzata (Get/Set)</h3>
+                <h3>5. Conversione Personalizzata (Get/Set)</h3>
                 <p class="explanation">
                     Usa <code>@@bind:get</code> e <code>@@bind:set</code> per controllare completamente la conversione.
                 </p>
@@ -332,11 +332,11 @@
                                     <div class="@(codiceFiscaleValido ? "valid-feedback" : "invalid-feedback")" style="display: block;">
                                         @if (codiceFiscaleValido)
                                         {
-                                            <span>✓ Codice fiscale valido</span>
+                                            <span>Codice fiscale valido</span>
                                         }
                                         else
                                         {
-                                            <span>✗ Il codice fiscale deve contenere esattamente 16 caratteri alfanumerici</span>
+                                            <span>Il codice fiscale deve contenere esattamente 16 caratteri alfanumerici</span>
                                         }
                                     </div>
                                 }
@@ -346,7 +346,7 @@
                 </div>
 
                 <div class="code-explanation">
-                    <strong>💡 Esempio di conversione personalizzata:</strong>
+                    <strong>Esempio di conversione personalizzata:</strong>
                     <pre><code>&lt;input @@bind:get="temperatura" @@bind:set="SetTemperatura" /&gt;
 
 @@code {
@@ -367,7 +367,7 @@
     <div class="row mb-5">
         <div class="col-md-12">
             <div class="demo-section">
-                <h3>6️⃣ Evento @@bind:after (Post-Binding)</h3>
+                <h3>6. Evento @@bind:after (Post-Binding)</h3>
                 <p class="explanation">
                     <code>@@bind:after</code> viene eseguito dopo che il binding è completato. Utile per validazioni o calcoli.
                 </p>
@@ -427,7 +427,7 @@
                 </div>
 
                 <div class="code-explanation">
-                    <strong>💡 Uso di @@bind:after:</strong>
+                    <strong>Uso di @@bind:after:</strong>
                     <pre><code>&lt;input @@bind="prezzo" @@bind:after="CalcolaTotale" /&gt;
 
 @@code {
@@ -446,7 +446,7 @@
     <div class="row mb-5">
         <div class="col-md-12">
             <div class="demo-section">
-                <h3>7️⃣ Binding con Altri Controlli</h3>
+                <h3>7. Binding con Altri Controlli</h3>
                 <p class="explanation">
                     Il binding funziona anche con select, checkbox, radio button e altri controlli.
                 </p>
@@ -519,7 +519,7 @@
                                 <h6>Valori Selezionati:</h6>
                                 <ul class="list-unstyled">
                                     <li><strong>Città:</strong> @(string.IsNullOrEmpty(cittaSelezionata) ? "Nessuna" : cittaSelezionata)</li>
-                                    <li><strong>Termini:</strong> @(accettaTermini ? "✓ Accettati" : "✗ Non accettati")</li>
+                                    <li><strong>Termini:</strong> @(accettaTermini ? "Accettati" : "Non accettati")</li>
                                     <li><strong>Taglia:</strong> @tagliaSel</li>
                                     <li><strong>Linguaggio:</strong> @linguaggioSelezionato</li>
                                     <li><strong>Slider:</strong> @valoreSlider%</li>
@@ -536,14 +536,14 @@
     <div class="row mb-5">
         <div class="col-md-12">
             <div class="demo-section best-practices">
-                <h3>📋 Best Practices e Consigli</h3>
+                <h3>Best Practices e Consigli</h3>
                 
                 <div class="row">
                     <div class="col-md-6">
                         <div class="tip-card">
-                            <div class="tip-icon">✅</div>
+                            <div class="tip-icon">DO</div>
                             <div class="tip-content">
-                                <h5>DO - Cosa Fare</h5>
+                                <h5>Cosa Fare</h5>
                                 <ul>
                                     <li>Usa <code>@@bind:event="oninput"</code> per feedback real-time</li>
                                     <li>Usa <code>@@bind:after</code> per calcoli post-binding</li>
@@ -557,9 +557,9 @@
                     
                     <div class="col-md-6">
                         <div class="tip-card danger">
-                            <div class="tip-icon">❌</div>
+                            <div class="tip-icon">DON'T</div>
                             <div class="tip-content">
-                                <h5>DON'T - Cosa Evitare</h5>
+                                <h5>Cosa Evitare</h5>
                                 <ul>
                                     <li>Non fare operazioni pesanti nel setter</li>
                                     <li>Non modificare altre proprietà nel setter (può causare loop)</li>

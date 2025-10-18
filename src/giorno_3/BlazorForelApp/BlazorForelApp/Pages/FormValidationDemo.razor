@@ -11,7 +11,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="alert alert-info">
-                <h4>?? Obiettivi Didattici</h4>
+                <h4>Obiettivi Didattici</h4>
                 <p>Questa pagina dimostra come validare i form in Blazor usando:</p>
                 <ul>
                     <li><strong>EditForm</strong> - Componente per gestire form con validazione</li>
@@ -28,7 +28,7 @@
     <div class="row mb-5">
         <div class="col-md-12">
             <div class="demo-section">
-                <h3>1?? EditForm Base con DataAnnotations</h3>
+                <h3>1. EditForm Base con DataAnnotations</h3>
                 <p class="explanation">
                     <code>EditForm</code> gestisce automaticamente la validazione quando si usa un modello con DataAnnotations.
                 </p>
@@ -75,14 +75,14 @@
                     @if (!string.IsNullOrEmpty(basicFormResult))
                     {
                         <div class="result-box success">
-                            <strong>? Form inviato con successo!</strong>
+                            <strong>Form inviato con successo!</strong>
                             <pre>@basicFormResult</pre>
                         </div>
                     }
                 </div>
 
                 <div class="code-explanation">
-                    <strong>?? Componenti chiave:</strong>
+                    <strong>Componenti chiave:</strong>
                     <pre><code>&lt;EditForm Model="@@model" OnValidSubmit="@@HandleSubmit"&gt;
     &lt;DataAnnotationsValidator /&gt;
     &lt;ValidationSummary /&gt;
@@ -101,7 +101,7 @@
     <div class="row mb-5">
         <div class="col-md-12">
             <div class="demo-section">
-                <h3>2?? DataAnnotations Comuni</h3>
+                <h3>2. DataAnnotations Comuni</h3>
                 <p class="explanation">
                     Gli attributi più utilizzati per la validazione dei dati.
                 </p>
@@ -203,13 +203,13 @@
                     @if (!string.IsNullOrEmpty(annotationsFormResult))
                     {
                         <div class="result-box success">
-                            <strong>? Tutti i campi sono validi!</strong>
+                            <strong>Tutti i campi sono validi!</strong>
                         </div>
                     }
                 </div>
 
                 <div class="code-explanation">
-                    <strong>?? Esempio di Model con DataAnnotations:</strong>
+                    <strong>Esempio di Model con DataAnnotations:</strong>
                     <pre><code>public class RegistrationModel
 {
     [Required(ErrorMessage = "Il nome è obbligatorio")]
@@ -243,7 +243,7 @@
     <div class="row mb-5">
         <div class="col-md-12">
             <div class="demo-section">
-                <h3>3?? Validazione Personalizzata</h3>
+                <h3>3. Validazione Personalizzata</h3>
                 <p class="explanation">
                     Crea validatori custom per regole di business specifiche.
                 </p>
@@ -313,14 +313,14 @@
                     @if (!string.IsNullOrEmpty(customFormResult))
                     {
                         <div class="result-box success">
-                            <strong>? Validazione custom superata!</strong>
+                            <strong>Validazione custom superata!</strong>
                             <pre>@customFormResult</pre>
                         </div>
                     }
                 </div>
 
                 <div class="code-explanation">
-                    <strong>?? Esempio di ValidationAttribute Custom:</strong>
+                    <strong>Esempio di ValidationAttribute Custom:</strong>
                     <pre><code>public class CodiceFiscaleAttribute : ValidationAttribute
 {
     protected override ValidationResult IsValid(
@@ -351,7 +351,7 @@
     <div class="row mb-5">
         <div class="col-md-12">
             <div class="demo-section">
-                <h3>4?? Form Complesso con Oggetti Annidati</h3>
+                <h3>4. Form Complesso con Oggetti Annidati</h3>
                 <p class="explanation">
                     Validazione di modelli complessi con oggetti nested e collezioni.
                 </p>
@@ -361,7 +361,7 @@
                         <DataAnnotationsValidator />
 
                         <div class="form-section">
-                            <h5>?? Dati Personali</h5>
+                            <h5>Dati Personali</h5>
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -397,7 +397,7 @@
                         </div>
 
                         <div class="form-section">
-                            <h5>?? Indirizzo</h5>
+                            <h5>Indirizzo</h5>
                             <div class="row">
                                 <div class="col-md-8">
                                     <div class="form-group">
@@ -440,7 +440,7 @@
                         </div>
 
                         <div class="form-section">
-                            <h5>?? Preferenze</h5>
+                            <h5>Preferenze</h5>
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -498,7 +498,7 @@
                     @if (!string.IsNullOrEmpty(registrationFormResult))
                     {
                         <div class="result-box success">
-                            <strong>? Registrazione completata con successo!</strong>
+                            <strong>Registrazione completata con successo!</strong>
                             <pre>@registrationFormResult</pre>
                         </div>
                     }
@@ -511,7 +511,7 @@
     <div class="row mb-5">
         <div class="col-md-12">
             <div class="demo-section">
-                <h3>5?? Eventi EditForm e Controllo Manuale</h3>
+                <h3>5. Eventi EditForm e Controllo Manuale</h3>
                 <p class="explanation">
                     Gestione avanzata: OnSubmit, OnValidSubmit, OnInvalidSubmit e validazione manuale.
                 </p>
@@ -547,7 +547,7 @@
 
                             <div class="col-md-6">
                                 <div class="info-panel">
-                                    <h6>?? Stato EditContext:</h6>
+                                    <h6>Stato EditContext:</h6>
                                     <ul class="list-unstyled">
                                         <li>
                                             <strong>IsModified:</strong>
@@ -588,7 +588,7 @@
                 </div>
 
                 <div class="code-explanation">
-                    <strong>?? Eventi e controllo manuale:</strong>
+                    <strong>Eventi e controllo manuale:</strong>
                     <pre><code>private EditContext editContext;
 
 protected override void OnInitialized()
@@ -627,14 +627,14 @@ private void AddCustomError()
     <div class="row mb-5">
         <div class="col-md-12">
             <div class="demo-section best-practices">
-                <h3>?? Best Practices per la Validazione Form</h3>
+                <h3>Best Practices per la Validazione Form</h3>
                 
                 <div class="row">
                     <div class="col-md-6">
                         <div class="tip-card">
-                            <div class="tip-icon">?</div>
+                            <div class="tip-icon">DO</div>
                             <div class="tip-content">
-                                <h5>DO - Cosa Fare</h5>
+                                <h5>Cosa Fare</h5>
                                 <ul>
                                     <li>Usa <code>DataAnnotationsValidator</code> per validazione automatica</li>
                                     <li>Mostra <code>ValidationMessage</code> vicino ad ogni campo</li>
@@ -650,9 +650,9 @@ private void AddCustomError()
                     
                     <div class="col-md-6">
                         <div class="tip-card danger">
-                            <div class="tip-icon">?</div>
+                            <div class="tip-icon">DON'T</div>
                             <div class="tip-content">
-                                <h5>DON'T - Cosa Evitare</h5>
+                                <h5>Cosa Evitare</h5>
                                 <ul>
                                     <li>Non fare validazione solo client-side (sicurezza)</li>
                                     <li>Non mostrare troppi errori contemporaneamente</li>
