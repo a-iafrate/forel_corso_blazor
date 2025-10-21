@@ -1,4 +1,7 @@
+@page "/demo-page-with-param"
 @page "/demo-page-with-param/{id:int}"
+@page "/demo-page-with-param/{id:int}/{id2}"
+
 @inject NavigationManager Navigation
 
 <PageTitle>Pagina con Parametro</PageTitle>
@@ -67,6 +70,8 @@
 
 @code {
     [Parameter] public int Id { get; set; }
+    [Parameter] public string? Id2 { get; set; }
+    
 
     protected override void OnParametersSet()
     {

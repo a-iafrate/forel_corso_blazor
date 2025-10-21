@@ -4,9 +4,9 @@
 
 <h1>Counter</h1>
 <p role="status">Componente di sistema blazor</p>
-<InputText @bind-Value="testo"></InputText>
+<InputText ty @bind-Value="testo"></InputText>
 <p role="status">Binding su controllo</p>
-<input type="text" @bind-value="@testo" />
+<input type="text" @bind-value="@testo" @bind:event="oninput"/>
 <p role="status">Proprietà di base</p>
 <input type="text" value="@testo" />
 <p role="status">Current text: @testo</p>
