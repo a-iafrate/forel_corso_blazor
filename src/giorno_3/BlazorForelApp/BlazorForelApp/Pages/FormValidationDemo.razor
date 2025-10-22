@@ -1,6 +1,7 @@
 @page "/form-validation-demo"
 
 @using System.ComponentModel.DataAnnotations
+@using BlazorForelApp.Resources
 
 <PageTitle>Demo Validazione Form</PageTitle>
 
@@ -802,7 +803,7 @@ private void AddCustomError()
     }
 
     private void ResetCustomForm()
-    {
+    {Color
         customModel = new CustomFormModel();
         customFormResult = "";
     }
@@ -879,8 +880,9 @@ private void AddCustomError()
     // Models
     public class BasicFormModel
     {
-        [Required(ErrorMessage = "Il nome è obbligatorio")]
-        [StringLength(50, MinimumLength = 2, ErrorMessage = "Il nome deve essere tra 2 e 50 caratteri")]
+        [Display(Name = "ErrName", ResourceType = typeof(ErrorMessages))]
+        [Required(ErrorMessageResourceName = "DefName", ErrorMessageResourceType = typeof(ErrorMessages))]
+        [StringLength(50, MinimumLength = 2, ErrorMessageResourceName = "DefName", ErrorMessageResourceType = typeof(ErrorMessages))]
         public string Nome { get; set; } = "";
 
         [Required(ErrorMessage = "L'email è obbligatoria")]

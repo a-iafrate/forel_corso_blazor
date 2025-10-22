@@ -1,7 +1,41 @@
 ﻿@page "/"
 
+@using BlazorForelApp.Resources
+@using Microsoft.Extensions.Localization
+@using System.Globalization
+@inject IStringLocalizer<CultureExample> Loc
+
 <PageTitle>Home</PageTitle>
 
 <h1>Hello, world!</h1>
 
+<ul>
+    <li><b>CurrentCulture</b>: @CultureInfo.CurrentCulture</li>
+    <li><b>CurrentUICulture</b>: @CultureInfo.CurrentUICulture</li>
+</ul>
+
 Welcome to your new app.
+<br />
+from html @Loc["Greeting"]
+<br />
+
+
+<p>
+   from code @greeting
+</p>
+<p>
+Date: @DateTime.Now.ToString("F");
+</p>
+<p>
+Number: @num.ToString("N2");
+</p>
+
+@code {
+    private string? greeting;
+    private double num = 1232134.32434;
+
+    protected override void OnInitialized()
+    {
+        greeting = Loc["Greeting"];
+    }
+}
